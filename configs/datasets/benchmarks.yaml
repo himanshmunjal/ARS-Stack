@@ -10,12 +10,12 @@
 # with the shared settings in `defaults`; `python -m src.data.ingest --dataset
 # benchmarks` downloads them all.
 #
-# Selection (fixed before any results were seen): all binary sets in the
-# collection with <= ~20k rows and <= ~100 features, excluding
+# Selection: ALL 27 datasets in the collection except the two that overlap
+# the core datasets —
 #   - mammography  (already a core dataset)
 #   - yeast_me2    (derived from the core yeast dataset)
-#   - isolet, scene, arrhythmia (278-617 features), webpage, protein_homo
-#     (35k-146k rows): too costly for repeated CV of 9 variants on one machine.
+# No dataset is excluded for size or cost (so 25 benchmarks, 330 - 145k rows,
+# 7 - 617 features, imbalance ratio 8.6 - 130).
 # The minority class is label 1 (imblearn encodes classes as -1 / 1).
 # =========================================================
 
@@ -42,6 +42,11 @@ benchmarks:
     - abalone_19
     - coil_2000
     - yeast_ml8
+    - isolet
+    - scene
+    - arrhythmia
+    - webpage
+    - protein_homo
 
   defaults:
     type: "binary"
