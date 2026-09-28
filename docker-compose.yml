@@ -1,0 +1,49 @@
+# Spins up ARS-Stack locally: the FastAPI inference endpoint plus an MLflow
+# tracking server for experiment logging (configs/base.yaml's
+# mlflow_tracking_uri points at this service's port by default).
+#
+# Usage:
+#   docker compose up --build              # start API + MLflow UI
+#   docker compose run --rm pipeline python -m src.pipeline --dataset creditcard --save-model
+#   docker compose run --rm pipeline python -m dags.ars_stack_dag --all
+
+services:
+  mlflow:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: >
+      bash -c "pip install --no-cache-dir mlflow==3.14.0 &&
+               mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:////app/mlflow.db"
+    ports:
+      - "5000:5000"
+
+  api:
+    build: .
+    depends_on:
+      - mlflow
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./reports:/app/reports
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+
+  # One-off runner for the pipeline / Prefect DAG — not started by `up`,
+  # invoked directly via `docker compose run pipeline <command>` (see header).
+  pipeline:
+    build: .
+    depends_on:
+      - mlflow
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./reports:/app/reports
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    profiles: ["tools"]
+    entrypoint: []
+    command: ["python", "-m", "src.pipeline", "--dataset", "creditcard"]

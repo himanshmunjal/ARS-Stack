@@ -1,0 +1,118 @@
+# =========================================================
+# ensemble.yaml — model configuration
+#
+# Two sections:
+#   baseline  -> fixed-resampler, single/simple-ensemble models used in
+#                Week 3 to reproduce literature numbers (Papers 7, 9, 10)
+#   ensemble  -> full stacking ensemble config used later by ARS-Stack
+#                (Week 7 onward) once the adaptive resampler-selector exists
+# =========================================================
+
+baseline:
+  resampler: "smote"              # fixed, matches Papers 7/9/10 — no adaptive selection here
+  smote:
+    k_neighbors: 5
+    random_state: 42
+
+  models:
+    random_forest:
+      n_estimators: 200
+      max_depth: null              # unlimited depth, matches typical baseline setup
+      class_weight: null           # SMOTE already balances classes; avoid double-correcting
+      random_state: 42
+      n_jobs: -1
+
+    xgboost:
+      n_estimators: 300
+      max_depth: 6
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      eval_metric: "aucpr"
+      random_state: 42
+      n_jobs: -1
+
+    logistic_regression:            # simple extra baseline, cheap sanity-check model
+      max_iter: 1000
+      random_state: 42
+
+  simple_stacking:                  # baseline "static" stacking, no confidence weighting
+    base_learners: ["random_forest", "xgboost"]
+    meta_learner: "logistic_regression"
+    cv_folds: 5
+    passthrough: false
+
+  reference_numbers:                # literature values to compare against (same creditcard dataset)
+    paper_7_xgboost:
+      f1: 0.89
+      auc_pr: 0.93
+    paper_7_easyensemble:
+      f1: 0.87
+    paper_9_stacking:
+      auc_roc: 0.943
+    paper_10_stacking_smote_tomek:
+      f1: 0.915
+      auc_pr: 0.90
+
+
+# =========================================================
+# Full ARS-Stack ensemble config (used from Week 7 onward)
+# =========================================================
+ensemble:
+  base_learners:
+    random_forest:
+      n_estimators: 300
+      max_depth: null
+      random_state: 42
+      n_jobs: -1
+
+    xgboost:
+      n_estimators: 300
+      max_depth: 6
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      eval_metric: "aucpr"
+      random_state: 42
+      n_jobs: -1
+
+    lightgbm:
+      n_estimators: 300
+      max_depth: -1
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      class_weight: null
+      random_state: 42
+      n_jobs: -1
+      verbose: -1                   # silence per-fit [LightGBM] [Info] logs
+
+  # How base-learner probabilities are combined:
+  #   "weighted_average" (ARS-Stack default): final probability = sum of
+  #       w_i * p_i with w_i from confidence_weighting below. Confidence
+  #       weights change the prediction directly here.
+  #   "meta_learner": classic stacking — a meta-learner is trained on the
+  #       base learners' out-of-fold probabilities. Confidence weights are NOT
+  #       applied in this mode: a linear/tree meta-learner cancels any constant
+  #       per-feature scaling, so weighting its inputs would be a no-op.
+  combiner: "weighted_average"
+
+  meta_learner:                     # used only when combiner == "meta_learner"
+    type: "logistic_regression"     # alternative: "xgboost" (ablation option, see Paper 10)
+    max_iter: 1000
+    random_state: 42
+
+  confidence_weighting:
+    enabled: true                   # false = equal weights (simple soft-voting average)
+    method: "validation_auc_pr"     # weight each base learner by its own val-set AUC-PR
+    min_weight: 0.05                # floor so no learner is fully zeroed out
+
+  # Binary only: pick the decision threshold that maximizes this metric on the
+  # validation set instead of using a fixed 0.5 (the right threshold depends
+  # on how much the training set was resampled).
+  threshold_tuning:
+    enabled: true
+    metric: "f1"
+
+  cv_folds: 5                       # out-of-fold predictions for the meta_learner combiner
+  passthrough: false                # meta_learner combiner only: also feed original features

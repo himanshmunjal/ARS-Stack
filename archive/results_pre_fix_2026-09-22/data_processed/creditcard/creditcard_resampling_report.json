@@ -1,0 +1,29 @@
+{
+  "n_clusters": 2,
+  "original_minority_count": 345,
+  "original_majority_count": 199019,
+  "final_minority_count": 990,
+  "final_majority_count": 199010,
+  "total_synthetic_generated": 667,
+  "total_majority_removed": 9,
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "cluster_size": 266,
+      "overlap_score": 0.309,
+      "density_score": 0.1753,
+      "resampler_chosen": "smote_enn",
+      "n_synthetic_generated": 510,
+      "n_majority_removed": 36
+    },
+    {
+      "cluster_id": 1,
+      "cluster_size": 79,
+      "overlap_score": 0.0633,
+      "density_score": 0.1454,
+      "resampler_chosen": "adasyn",
+      "n_synthetic_generated": 157,
+      "n_majority_removed": 0
+    }
+  ]
+}

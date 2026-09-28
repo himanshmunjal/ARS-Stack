@@ -1,0 +1,67 @@
+# resamplers.yaml — candidate resampler pool + adaptive selection rules
+#
+# Used by src/resampling/resampler_selector.py (the core novel module of
+# ARS-Stack) to decide which resampling technique fits each minority-class
+# cluster, instead of applying one resampler globally.
+
+resamplers:
+  candidates: ["smote", "adasyn", "smote_tomek", "smote_enn"]
+  default_random_state: 42
+
+  smote:
+    k_neighbors: 5
+    random_state: 42
+
+  adasyn:
+    n_neighbors: 5
+    random_state: 42
+
+  smote_tomek:
+    smote_k_neighbors: 5
+    random_state: 42
+
+  smote_enn:
+    smote_k_neighbors: 5
+    random_state: 42
+
+  # How far to oversample every minority class, as (final minority count) /
+  # (majority count). 1.0 = fully balanced. The SAME ratio is used by the
+  # adaptive path and by every global baseline resampler, so ablations compare
+  # resampler *selection*, never the *amount* of oversampling.
+  target_balance_ratio: 1.0
+
+  # Used when a cluster's chosen resampler raises (e.g. ADASYN finds no
+  # majority neighbours): the same number of samples is generated with this
+  # instead, so every cluster still gets its full allocation.
+  fallback_resampler: "smote"
+
+  # Selection rules
+  #
+  # Decision logic per cluster (see resampler_selector.py):
+  #   overlap_score >= very_high_overlap  -> smote_enn   (strong noise cleaning)
+  #   overlap_score >= high_overlap       -> smote_tomek (moderate cleaning)
+  #   density <= low_density              -> adasyn      (sparse/isolated points)
+  #   otherwise                            -> smote       (well-behaved default)
+  selection:
+    # "absolute" (default): fixed, interpretable cutoffs. overlap_score is
+    #   already on a fixed [0, 1] scale (fraction of majority-class neighbours);
+    #   density uses density_ratio = cluster density / density of the whole
+    #   class, so it's scale-free across datasets (1.0 = as dense as the class).
+    # "relative": percentile cutoffs across the clusters of the current run.
+    #   Only meaningful with several clusters — with 1-2 clusters percentiles
+    #   force the choice by rank — so below min_clusters_for_relative it falls
+    #   back to absolute automatically.
+    mode: "absolute"
+    min_clusters_for_relative: 3
+
+    absolute:
+      high_overlap_threshold: 0.4          # >= 40% majority neighbours -> boundary cleaning
+      very_high_overlap_threshold: 0.7     # >= 70% majority neighbours -> strong cleaning
+      low_density_ratio_threshold: 0.75    # cluster < 75% as dense as its class -> adasyn
+
+    relative:
+      high_overlap_percentile: 66
+      very_high_overlap_percentile: 90
+      low_density_percentile: 33
+
+    min_cluster_size_for_smote: 6          # SMOTE/ADASYN need >= k_neighbors+1 samples; below this, force random_oversample

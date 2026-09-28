@@ -1,0 +1,53 @@
+# =========================================================
+# benchmarks.yaml — imbalanced-learn benchmark collection
+#
+# Binary imbalanced datasets from imblearn.datasets.fetch_datasets() (the
+# benchmark suite of Ding, 2011, drawn from UCI/KEEL/LIBSVM), used so the
+# paper's claims rest on a cross-dataset comparison (Friedman test + post-hoc,
+# Demšar 2006) rather than on three case studies.
+#
+# Every name below is registered as its own dataset (see src/data/ingest.py),
+# with the shared settings in `defaults`; `python -m src.data.ingest --dataset
+# benchmarks` downloads them all.
+#
+# Selection (fixed before any results were seen): all binary sets in the
+# collection with <= ~20k rows and <= ~100 features, excluding
+#   - mammography  (already a core dataset)
+#   - yeast_me2    (derived from the core yeast dataset)
+#   - isolet, scene, arrhythmia (278-617 features), webpage, protein_homo
+#     (35k-146k rows): too costly for repeated CV of 9 variants on one machine.
+# The minority class is label 1 (imblearn encodes classes as -1 / 1).
+# =========================================================
+
+benchmarks:
+  source: "imbalanced-learn:fetch_datasets"
+  datasets:
+    - ecoli
+    - optical_digits
+    - satimage
+    - pen_digits
+    - abalone
+    - sick_euthyroid
+    - spectrometer
+    - car_eval_34
+    - us_crime
+    - libras_move
+    - thyroid_sick
+    - solar_flare_m0
+    - oil
+    - car_eval_4
+    - wine_quality
+    - letter_img
+    - ozone_level
+    - abalone_19
+    - coil_2000
+    - yeast_ml8
+
+  defaults:
+    type: "binary"
+    target_column: "target"
+    positive_label: 1
+    id_columns: []
+    scaling:
+      method: "standard"
+      columns: "all_numeric"

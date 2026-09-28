@@ -1,0 +1,44 @@
+file.txt
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+*.egg-info/
+
+# Ignore node_modules folder
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore environment files
+.env
+.env.local
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.iml
+
+# ML artifacts (reproducible via pipeline, not source)
+mlflow.db
+mlruns/
+models/*.joblib
+archive/**/*.joblib
+reports/ablation_results_quick/
+reports/resampling/
+
+# Data is versioned by DVC (dvc.yaml / dvc.lock), never by git —
+# creditcard.csv alone is 150 MB, over GitHub's 100 MB file limit.
+/data/raw/
+/data/processed/

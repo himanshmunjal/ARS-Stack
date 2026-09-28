@@ -1,0 +1,17 @@
+dataset,comparison,metric,p_raw,p_holm,significant_after_correction,effect_size_r
+creditcard,adaptive_resampling,f1,0.00537109375,0.0107421875,True,0.783
+creditcard,adaptive_resampling,auc_pr,0.7197265625,0.7197265625,False,0.117
+creditcard,adaptive_resampling,g_mean,6.103515625e-05,0.000244140625,True,-1.0
+creditcard,adaptive_resampling,mcc,0.00115966796875,0.00347900390625,True,0.883
+creditcard,confidence_weighting,f1,0.0057715890441035304,0.01731476713231059,True,0.868
+creditcard,confidence_weighting,auc_pr,6.103515625e-05,0.000244140625,True,1.0
+creditcard,confidence_weighting,g_mean,0.0057715890441035304,0.01731476713231059,True,0.868
+creditcard,confidence_weighting,mcc,0.008774633060101174,0.01731476713231059,True,0.824
+mammography,adaptive_resampling,f1,0.48870849609375,1.0,False,-0.217
+mammography,adaptive_resampling,auc_pr,0.890380859375,1.0,False,0.05
+mammography,adaptive_resampling,g_mean,6.103515625e-05,0.000244140625,True,-1.0
+mammography,adaptive_resampling,mcc,0.76153564453125,1.0,False,-0.1
+mammography,confidence_weighting,f1,0.6547208460185769,1.0,False,0.333
+mammography,confidence_weighting,auc_pr,0.52447509765625,1.0,False,-0.2
+mammography,confidence_weighting,g_mean,0.6547208460185769,1.0,False,-0.333
+mammography,confidence_weighting,mcc,0.6547208460185769,1.0,False,0.333

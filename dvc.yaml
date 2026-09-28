@@ -1,0 +1,99 @@
+# =========================================================
+# dvc.yaml — DVC pipeline definition
+#
+# Explicit stages per dataset (rather than a `foreach` loop) because each
+# dataset's raw file path/extension differs (creditcard.csv, mammography.csv,
+# yeast.data) — explicit stages keep the paths unambiguous and easy to debug.
+#
+# Raw-data outputs are `persist: true`: DVC normally deletes a stage's outputs
+# before re-running it, and the creditcard CSV can only be re-downloaded with
+# Kaggle credentials — so an edit to src/data/ingest.py must not wipe it.
+#
+# Run the whole pipeline with:   dvc repro
+# Run one stage only with:       dvc repro preprocess_creditcard
+# Visualize the DAG with:        dvc dag
+# =========================================================
+
+stages:
+
+  # -------------------------------------------------------------
+  # Credit Card Fraud
+  # -------------------------------------------------------------
+  ingest_creditcard:
+    cmd: python -m src.data.ingest --dataset creditcard
+    deps:
+      - src/data/ingest.py
+      - configs/datasets/creditcard.yaml
+    outs:
+      - data/raw/creditcard/creditcard.csv:
+          persist: true
+
+  preprocess_creditcard:
+    cmd: python -m src.data.preprocess --dataset creditcard
+    deps:
+      - data/raw/creditcard/creditcard.csv
+      - src/data/preprocess.py
+      - src/data/ingest.py
+      - configs/base.yaml
+      - configs/datasets/creditcard.yaml
+    outs:
+      - data/processed/creditcard
+
+  # -------------------------------------------------------------
+  # Mammography
+  # -------------------------------------------------------------
+  ingest_mammography:
+    cmd: python -m src.data.ingest --dataset mammography
+    deps:
+      - src/data/ingest.py
+      - configs/datasets/mammography.yaml
+    outs:
+      - data/raw/mammography/mammography.csv:
+          persist: true
+
+  preprocess_mammography:
+    cmd: python -m src.data.preprocess --dataset mammography
+    deps:
+      - data/raw/mammography/mammography.csv
+      - src/data/preprocess.py
+      - src/data/ingest.py
+      - configs/base.yaml
+      - configs/datasets/mammography.yaml
+    outs:
+      - data/processed/mammography
+
+  # -------------------------------------------------------------
+  # Yeast (multiclass)
+  # -------------------------------------------------------------
+  ingest_yeast:
+    cmd: python -m src.data.ingest --dataset yeast_multiclass
+    deps:
+      - src/data/ingest.py
+      - configs/datasets/yeast_multiclass.yaml
+    outs:
+      - data/raw/yeast/yeast.data:
+          persist: true
+
+  preprocess_yeast:
+    cmd: python -m src.data.preprocess --dataset yeast_multiclass
+    deps:
+      - data/raw/yeast/yeast.data
+      - src/data/preprocess.py
+      - src/data/ingest.py
+      - configs/base.yaml
+      - configs/datasets/yeast_multiclass.yaml
+    outs:
+      - data/processed/yeast
+  # -------------------------------------------------------------
+  # imbalanced-learn benchmark collection (configs/datasets/benchmarks.yaml)
+  # Used only by the repeated-CV study (src/experiments/run_ablation.py),
+  # which cleans/splits/scales them itself inside each fold.
+  # -------------------------------------------------------------
+  ingest_benchmarks:
+    cmd: python -m src.data.ingest --dataset benchmarks
+    deps:
+      - src/data/ingest.py
+      - configs/datasets/benchmarks.yaml
+    outs:
+      - data/raw/benchmarks:
+          persist: true

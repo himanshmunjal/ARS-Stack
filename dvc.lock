@@ -1,0 +1,154 @@
+schema: '2.0'
+stages:
+  ingest_creditcard:
+    cmd: python -m src.data.ingest --dataset creditcard
+    deps:
+    - path: configs/datasets/creditcard.yaml
+      hash: md5
+      md5: 23eca4b826152c16b2e0154912ca9c6f
+      size: 1230
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    outs:
+    - path: data/raw/creditcard/creditcard.csv
+      hash: md5
+      md5: e90efcb83d69faf99fcab8b0255024de
+      size: 150828752
+  preprocess_creditcard:
+    cmd: python -m src.data.preprocess --dataset creditcard
+    deps:
+    - path: configs/base.yaml
+      hash: md5
+      md5: c7859835d8aa985d9f0e8959c397a425
+      size: 1650
+    - path: configs/datasets/creditcard.yaml
+      hash: md5
+      md5: 23eca4b826152c16b2e0154912ca9c6f
+      size: 1230
+    - path: data/raw/creditcard/creditcard.csv
+      hash: md5
+      md5: e90efcb83d69faf99fcab8b0255024de
+      size: 150828752
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 4802a40b65466105d831fd078cc4d2ce
+      size: 11122
+    outs:
+    - path: data/processed/creditcard
+      hash: md5
+      md5: a7cc27831c96cc84c080fb59e4aa6bdf.dir
+      size: 157578464
+      nfiles: 4
+  ingest_mammography:
+    cmd: python -m src.data.ingest --dataset mammography
+    deps:
+    - path: configs/datasets/mammography.yaml
+      hash: md5
+      md5: 800adf3661c16c0382cf1ce728bee546
+      size: 1228
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    outs:
+    - path: data/raw/mammography/mammography.csv
+      hash: md5
+      md5: 74946940556cafc5f1a53c8ce288e9a8
+      size: 805606
+  preprocess_mammography:
+    cmd: python -m src.data.preprocess --dataset mammography
+    deps:
+    - path: configs/base.yaml
+      hash: md5
+      md5: c7859835d8aa985d9f0e8959c397a425
+      size: 1650
+    - path: configs/datasets/mammography.yaml
+      hash: md5
+      md5: 800adf3661c16c0382cf1ce728bee546
+      size: 1228
+    - path: data/raw/mammography/mammography.csv
+      hash: md5
+      md5: 74946940556cafc5f1a53c8ce288e9a8
+      size: 805606
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 4802a40b65466105d831fd078cc4d2ce
+      size: 11122
+    outs:
+    - path: data/processed/mammography
+      hash: md5
+      md5: 9fbfb7e824a9cf85e09221fc24ea0d64.dir
+      size: 948330
+      nfiles: 4
+  ingest_yeast:
+    cmd: python -m src.data.ingest --dataset yeast_multiclass
+    deps:
+    - path: configs/datasets/yeast_multiclass.yaml
+      hash: md5
+      md5: 63d82ee094f894070905bbc70a59a91a
+      size: 1345
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    outs:
+    - path: data/raw/yeast/yeast.data
+      hash: md5
+      md5: 4aa384172e1d518f2a29c7137310d51f
+      size: 77837
+  preprocess_yeast:
+    cmd: python -m src.data.preprocess --dataset yeast_multiclass
+    deps:
+    - path: configs/base.yaml
+      hash: md5
+      md5: c7859835d8aa985d9f0e8959c397a425
+      size: 1650
+    - path: configs/datasets/yeast_multiclass.yaml
+      hash: md5
+      md5: 63d82ee094f894070905bbc70a59a91a
+      size: 1345
+    - path: data/raw/yeast/yeast.data
+      hash: md5
+      md5: 4aa384172e1d518f2a29c7137310d51f
+      size: 77837
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 4802a40b65466105d831fd078cc4d2ce
+      size: 11122
+    outs:
+    - path: data/processed/yeast
+      hash: md5
+      md5: 7917f474ceeca7adc1b0b34068dfdd25.dir
+      size: 237589
+      nfiles: 5
+  ingest_benchmarks:
+    cmd: python -m src.data.ingest --dataset benchmarks
+    deps:
+    - path: configs/datasets/benchmarks.yaml
+      hash: md5
+      md5: b6e22b837d973c0342a186cd254b2495
+      size: 1693
+    - path: src/data/ingest.py
+      hash: md5
+      md5: e24e68b4eaa35637a89505f58caba3f6
+      size: 14469
+    outs:
+    - path: data/raw/benchmarks
+      hash: md5
+      md5: b4c45248d0f13d79fdcdd96432d78ed5.dir
+      size: 16263593
+      nfiles: 20

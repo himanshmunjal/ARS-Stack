@@ -1,0 +1,4 @@
+dataset,model,source,f1,auc_pr,g_mean,mcc
+mammography,RandomForest + SMOTE,this project,0.6154,0.6056,0.7866,0.6023
+mammography,XGBoost + SMOTE,this project,0.6126,0.6385,0.8095,0.6006
+mammography,"Simple Stacking (RF+XGB, LR meta) + SMOTE",this project,0.6476,0.6319,0.8111,0.6357

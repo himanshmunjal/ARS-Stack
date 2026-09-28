@@ -1,0 +1,39 @@
+{
+  "dataset": "mammography",
+  "resampler": "smote",
+  "metrics": {
+    "f1": 0.6086956521739131,
+    "auc_pr": 0.6243666677597145,
+    "g_mean": 0.7377811018101013,
+    "mcc": 0.6008041754751867
+  },
+  "decision_threshold": 0.7816823642047802,
+  "base_learner_weights": {
+    "random_forest": 0.33574979350395134,
+    "xgboost": 0.33391178997560544,
+    "lightgbm": 0.33033841652044327
+  },
+  "params": {
+    "dataset": "mammography",
+    "task_type": "binary",
+    "resampler": "smote",
+    "target_balance_ratio": 1.0,
+    "selection_mode": "absolute",
+    "combiner": "weighted_average",
+    "confidence_weighting_enabled": true,
+    "threshold_tuning": true
+  },
+  "resampling_report": {
+    "mode": "global_smote",
+    "resampler_used": "smote",
+    "target_balance_ratio": 1.0,
+    "original_class_counts": {
+      "0": 5316,
+      "1": 178
+    },
+    "final_class_counts": {
+      "0": 5316,
+      "1": 5316
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# =========================================================
+# clustering.yaml — minority-class clustering + density scoring config
+#
+# Used by src/clustering/minority_clustering.py and
+# src/clustering/density_scoring.py. The scores these produce feed directly
+# into src/resampling/resampler_selector.py (Week 5) to decide which
+# resampler fits each cluster.
+# =========================================================
+
+clustering:
+  method: "kmeans"            # options: "kmeans", "dbscan"
+  random_state: 42
+  min_cluster_size: 10          # clusters smaller than this are merged into the largest cluster
+
+  kmeans:
+    auto_k: true                # if true, picks k via best silhouette score in [k_min, k_max]
+    k_min: 2
+    k_max: 6
+    n_clusters: 3                # used only if auto_k is false
+
+  dbscan:
+    eps: 0.5
+    min_samples: 5
+
+  density_scoring:
+    overlap_k: 10                 # neighbors considered for overlap score (drawn from full dataset)
+    density_k: 5                  # neighbors considered for density score (within-cluster only)
+    positive_label: 1              # which class is "minority" — should match dataset config's positive_label

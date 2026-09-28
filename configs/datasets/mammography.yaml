@@ -1,0 +1,36 @@
+# =========================================================
+# mammography.yaml — Mammography Imbalanced Dataset
+# Binary, moderate-high imbalance (~1:42)
+# =========================================================
+
+dataset:
+  name: "mammography"
+  type: "binary"
+  source: "imbalanced-learn:fetch_datasets"   # sklearn.datasets-style fetch via imblearn
+  fetch_key: "mammography"                     # key passed to imblearn.datasets.fetch_datasets()
+  raw_file: "data/raw/mammography/mammography.csv"
+  processed_file: "data/processed/mammography/mammography_processed.csv"
+
+  target_column: "target"        # -1 = majority (healthy), 1 = minority (calcification)
+  positive_label: 1
+  id_columns: []
+
+  feature_columns: null
+  categorical_columns: []
+  numeric_columns:
+    - "feature_0"
+    - "feature_1"
+    - "feature_2"
+    - "feature_3"
+    - "feature_4"
+    - "feature_5"
+
+  scaling:
+    method: "standard"
+    columns: "all_numeric"        # scale all numeric features
+
+  expected_imbalance_ratio: "1:42"
+  notes: >
+    Standard imbalance-learning benchmark dataset, no licensing friction,
+    medical-adjacent domain. Loaded directly via imbalanced-learn's
+    fetch_datasets() utility rather than a manual download.

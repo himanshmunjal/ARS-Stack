@@ -1,0 +1,158 @@
+{
+  "creditcard": {
+    "adaptive_resampling_effect": {
+      "auc_pr": {
+        "statistic": 53.0,
+        "p_value": 0.7197265625,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": 0.0009023174369431711,
+        "median_diff": 0.0008493641151406939,
+        "n_pairs": 15
+      },
+      "f1": {
+        "statistic": 13.0,
+        "p_value": 0.00537109375,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.020360609820520615,
+        "median_diff": 0.015174343521308753,
+        "n_pairs": 15
+      },
+      "g_mean": {
+        "statistic": 0.0,
+        "p_value": 6.103515625e-05,
+        "significant": true,
+        "direction": "b < a",
+        "mean_diff": -0.02664342848489046,
+        "median_diff": -0.02826217520283203,
+        "n_pairs": 15
+      },
+      "mcc": {
+        "statistic": 7.0,
+        "p_value": 0.00115966796875,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.02416824063256319,
+        "median_diff": 0.01750721203249861,
+        "n_pairs": 15
+      }
+    },
+    "confidence_weighting_effect": {
+      "auc_pr": {
+        "statistic": 0.0,
+        "p_value": 6.103515625e-05,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.012403954452577826,
+        "median_diff": 0.009303087674469301,
+        "n_pairs": 15
+      },
+      "f1": {
+        "statistic": 6.0,
+        "p_value": 0.0057715890441035304,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.01255732396787157,
+        "median_diff": 0.00642857142857145,
+        "n_pairs": 15
+      },
+      "g_mean": {
+        "statistic": 6.0,
+        "p_value": 0.0057715890441035304,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.014482429969704103,
+        "median_diff": 0.005774637797777871,
+        "n_pairs": 15
+      },
+      "mcc": {
+        "statistic": 8.0,
+        "p_value": 0.008774633060101174,
+        "significant": true,
+        "direction": "b > a",
+        "mean_diff": 0.010746651920064883,
+        "median_diff": 0.00581813663659847,
+        "n_pairs": 15
+      }
+    }
+  },
+  "mammography": {
+    "adaptive_resampling_effect": {
+      "auc_pr": {
+        "statistic": 57.0,
+        "p_value": 0.890380859375,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": 0.0014867387014878255,
+        "median_diff": 0.0021475235910860535,
+        "n_pairs": 15
+      },
+      "f1": {
+        "statistic": 47.0,
+        "p_value": 0.48870849609375,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": -0.00424172646830104,
+        "median_diff": -0.009791921664626724,
+        "n_pairs": 15
+      },
+      "g_mean": {
+        "statistic": 0.0,
+        "p_value": 6.103515625e-05,
+        "significant": true,
+        "direction": "b < a",
+        "mean_diff": -0.08026416007801315,
+        "median_diff": -0.07841413443945966,
+        "n_pairs": 15
+      },
+      "mcc": {
+        "statistic": 54.0,
+        "p_value": 0.76153564453125,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": 0.0014073061228970266,
+        "median_diff": 0.002779089907210208,
+        "n_pairs": 15
+      }
+    },
+    "confidence_weighting_effect": {
+      "auc_pr": {
+        "statistic": 48.0,
+        "p_value": 0.52447509765625,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": -0.00014615431363044587,
+        "median_diff": -6.143286721549401e-07,
+        "n_pairs": 15
+      },
+      "f1": {
+        "statistic": 1.0,
+        "p_value": 0.6547208460185769,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": 2.935648619706299e-06,
+        "median_diff": 0.0,
+        "n_pairs": 15
+      },
+      "g_mean": {
+        "statistic": 1.0,
+        "p_value": 0.6547208460185769,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": -7.17719275130276e-07,
+        "median_diff": 0.0,
+        "n_pairs": 15
+      },
+      "mcc": {
+        "statistic": 1.0,
+        "p_value": 0.6547208460185769,
+        "significant": false,
+        "direction": "no significant difference",
+        "mean_diff": 3.9024712488659276e-05,
+        "median_diff": 0.0,
+        "n_pairs": 15
+      }
+    }
+  }
+}

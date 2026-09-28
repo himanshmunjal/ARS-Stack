@@ -1,0 +1,22 @@
+{
+  "dataset": "creditcard",
+  "adaptive_resampling": false,
+  "metrics": {
+    "f1": 0.8333333333333334,
+    "auc_pr": 0.8757649015660612,
+    "g_mean": 0.9311426451663811,
+    "mcc": 0.833678405373704
+  },
+  "base_learner_weights": {
+    "random_forest": 0.33314537791468607,
+    "xgboost": 0.3344673196281305,
+    "lightgbm": 0.33238730245718345
+  },
+  "resampling_report": {
+    "mode": "plain_smote_ablation",
+    "original_minority_count": 345,
+    "original_majority_count": 199019,
+    "final_minority_count": 199019,
+    "final_majority_count": 199019
+  }
+}

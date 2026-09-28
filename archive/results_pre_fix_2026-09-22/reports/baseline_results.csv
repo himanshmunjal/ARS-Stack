@@ -1,0 +1,4 @@
+model,f1,auc_pr,g_mean,mcc
+RandomForest + SMOTE,0.829,0.8678,0.9034,0.8288
+XGBoost + SMOTE,0.7887,0.8729,0.9256,0.7909
+Simple Stacking (RF+XGB) + SMOTE,0.82,0.8706,0.9146,0.8198

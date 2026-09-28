@@ -1,0 +1,47 @@
+# =========================================================
+# base.yaml — global project configuration
+# Shared across all datasets and experiments.
+# Dataset-specific and model-specific configs override/extend this.
+# =========================================================
+
+project:
+  name: "ars-stack"
+  seed: 42                     # global random seed for reproducibility
+  output_dir: "reports"
+  mlflow_experiment_name: "ars-stack-experiments"
+  mlflow_tracking_uri: "http://localhost:5000"
+
+paths:
+  raw_dir: "data/raw"
+  interim_dir: "data/interim"
+  processed_dir: "data/processed"
+  figures_dir: "reports/figures"
+
+preprocessing:
+  drop_duplicates: true          # creditcard has ~1,081 exact duplicate rows; drop before splitting so none straddle train/test
+
+split:
+  test_size: 0.2
+  val_size: 0.1                # taken out of the remaining train set
+  stratify: true                # stratify split by target class
+  shuffle: true
+
+cross_validation:
+  n_splits: 5
+  strategy: "stratified_kfold"  # keeps class ratio consistent per fold
+  repeats: 3                    # for Wilcoxon significance testing later
+
+logging:
+  level: "INFO"
+  log_dir: "reports/logs"
+
+# Which config files to load per run (overridden via CLI --dataset flag)
+active_dataset_config: "configs/datasets/creditcard.yaml"
+active_resampler_config: "configs/models/resamplers.yaml"
+active_clustering_config: "configs/models/clustering.yaml"
+active_ensemble_config: "configs/models/ensemble.yaml"
+
+evaluation:
+  metrics: ["f1", "auc_pr", "g_mean", "mcc"]
+  primary_metric: "auc_pr"      # used for model selection / early stopping
+  significance_test: "wilcoxon"

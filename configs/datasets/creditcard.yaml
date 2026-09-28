@@ -1,0 +1,31 @@
+# =========================================================
+# creditcard.yaml — Kaggle ULB Credit Card Fraud Detection
+# Binary, extreme imbalance (~1:578)
+# =========================================================
+
+dataset:
+  name: "creditcard"
+  type: "binary"
+  source: "kaggle:mlg-ulb/creditcardfraud"
+  raw_file: "data/raw/creditcard/creditcard.csv"
+  processed_file: "data/processed/creditcard/creditcard_processed.csv"
+
+  target_column: "Class"        # 1 = fraud, 0 = legitimate
+  positive_label: 1              # the minority/rare class of interest
+  id_columns: []                 # no ID column to drop in this dataset
+
+  feature_columns: null          # null = use all columns except target/id
+  categorical_columns: []        # all features are numeric (PCA components + Amount/Time)
+  numeric_columns:
+    - "Time"
+    - "Amount"
+    # V1..V28 are already numeric PCA components, added programmatically
+
+  scaling:
+    method: "standard"           # StandardScaler on Time/Amount (V1-V28 already scaled)
+    columns: ["Time", "Amount"]
+
+  expected_imbalance_ratio: "1:578"
+  notes: >
+    Same dataset used in baseline papers (Papers 7, 9, 10 in literature review)
+    to allow direct, apples-to-apples comparison.

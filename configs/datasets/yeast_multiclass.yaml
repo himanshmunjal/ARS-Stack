@@ -1,0 +1,42 @@
+# =========================================================
+# yeast_multiclass.yaml — UCI Yeast Dataset
+# Multiclass imbalance (10 classes, ratio up to ~1:92)
+# =========================================================
+
+dataset:
+  name: "yeast_multiclass"
+  type: "multiclass"
+  source: "uci:https://archive.ics.uci.edu/dataset/110/yeast"
+  raw_file: "data/raw/yeast/yeast.data"
+  processed_file: "data/processed/yeast/yeast_processed.csv"
+
+  target_column: "class"         # localization site, 10 possible classes
+  positive_label: null            # not applicable — multiclass, all classes evaluated
+  minority_classes:               # classes with very few samples, used for stratification checks
+    - "ERL"
+    - "VAC"
+    - "POX"
+  id_columns:
+    - "sequence_name"             # protein sequence name, drop before modeling
+
+  feature_columns: null
+  categorical_columns: []
+  numeric_columns:
+    - "mcg"
+    - "gvh"
+    - "alm"
+    - "mit"
+    - "erl"
+    - "pox"
+    - "vac"
+    - "nuc"
+
+  scaling:
+    method: "standard"
+    columns: "all_numeric"
+
+  expected_imbalance_ratio: "up to 1:92 across classes"
+  notes: >
+    Fills the multiclass-imbalance research gap identified in the literature
+    review (Paper 3). Requires macro-averaged metrics (F1-macro, MCC) rather
+    than binary-only metrics used for the other two datasets.
