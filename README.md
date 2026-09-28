@@ -176,10 +176,13 @@ caffeinate -i python -m src.experiments.run_ablation     # macOS: keep the machi
 the configs and the result-affecting code, so a code change can never mix
 with earlier folds (use `--fresh` to restart).
 
-Approximate run time on an 8-core Apple M1 / 8 GB (similar on an 8 vCPU VM):
-creditcard ~12–15 h (dominated by `meta_stacking`), the 20 benchmarks ~4–7 h,
-mammography + yeast ~1.5 h — roughly 18–24 h in total (extrapolated from a full
-creditcard run and the `--quick` run). Peak memory stays under ~1 GB.
+Approximate run time of the full study on an 8-core Apple M1 / 8 GB
+(similar on an 8 vCPU VM; roughly halves on a 16-core CPU): creditcard
+~12–15 h, protein_homo ~10 h, isolet + webpage ~4–5 h, the other 23 datasets
+~4–6 h — about 30–36 h in total (measured on full-size folds of creditcard and
+protein_homo, extrapolated from the `--quick` run for the rest). Random Forest
+dominates and is CPU-only, so an NVIDIA GPU (used by XGBoost) saves only
+~5–10%; CPU cores are what matter. Peak memory stays under ~2 GB.
 
 ## Serving
 
