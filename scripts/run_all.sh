@@ -3,14 +3,14 @@
 # run_all.sh — run the complete ARS-Stack project end to end, on any machine.
 #
 #   bash scripts/run_all.sh --quick    # smoke test of every step first (~20-30 min)
-#   bash scripts/run_all.sh            # full run (~18-24 h on 8 cores; resumable)
+#   bash scripts/run_all.sh            # full run on all 28 datasets (see README for time; resumable)
 #
 # What it does, in order:
 #   0. Checks Python >= 3.11, creates venv/ and installs requirements.txt if
 #      needed, and checks the raw data (see "Data" below).
 #   1. Unit tests
 #   2. dvc repro: ingest + clean + dedup + split + scale; downloads mammography,
-#      yeast and the 20 benchmark datasets automatically (needs internet)
+#      yeast and the 25 benchmark datasets automatically (needs internet)
 #   3. Literature baseline reproduction
 #   4. Single-split ARS-Stack runs + saved models for serving
 #   5. Repeated-CV ablation study + all statistics (the paper's results)
@@ -90,6 +90,18 @@ if command -v git >/dev/null 2>&1 && [[ -n "$(git status --porcelain -- src conf
 fi
 echo "Machine: $(uname -sm), $("$PY" -c 'import os; print(os.cpu_count())') CPUs"
 
+# GPU: XGBoost uses it when configs/models/ensemble.yaml -> ensemble.device is
+# "auto"/"cuda". If an NVIDIA GPU is present but XGBoost can't use it, stop
+# instead of silently spending the whole run on CPU.
+DEVICE="$("$PY" -c 'from src.ensemble.base_learners import resolve_device as r; import yaml; print(r(yaml.safe_load(open("configs/models/ensemble.yaml"))["ensemble"].get("device", "cpu")))')"
+echo "XGBoost device: $DEVICE (Random Forest, LightGBM and resampling always run on CPU)"
+if command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi >/dev/null 2>&1; then
+  echo "GPU: $(nvidia-smi --query-gpu=name,driver_version --format=csv,noheader | head -1)"
+  [[ "$DEVICE" == "cuda" ]] || [[ "${ALLOW_CPU:-}" == "1" ]] || die "An NVIDIA GPU is present but XGBoost can't use it.
+  Check the NVIDIA driver/CUDA install (xgboost from PyPI on Linux/Windows includes CUDA),
+  or re-run with ALLOW_CPU=1 to deliberately run everything on CPU."
+fi
+
 # Keep the machine awake for the long steps (the OS sleeping pauses the run).
 KEEP_AWAKE=()
 if command -v caffeinate >/dev/null 2>&1; then KEEP_AWAKE=(caffeinate -i)            # macOS
@@ -115,7 +127,7 @@ for ds in "${DATASETS[@]}"; do
   run -m src.pipeline --dataset "$ds" --resampler smote     # fixed-SMOTE reference on the same split
 done
 
-step "5/5  Repeated-CV ablation study + statistics (all 23 datasets)"
+step "5/5  Repeated-CV ablation study + statistics (all 28 datasets)"
 run -m src.experiments.run_ablation $QUICK
 
 step "Done — results"
