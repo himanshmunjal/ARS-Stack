@@ -59,6 +59,13 @@ baseline:
 # Full ARS-Stack ensemble config (used from Week 7 onward)
 # =========================================================
 ensemble:
+  # Where XGBoost trains: "auto" (NVIDIA GPU if usable, else CPU), "cpu", or
+  # "cuda" (fail if no usable GPU). Random Forest, LightGBM and the resamplers
+  # always run on CPU. GPU and CPU XGBoost give slightly different models; the
+  # device actually used is recorded with every result, and the CV runner
+  # refuses to mix folds from different devices.
+  device: "auto"
+
   base_learners:
     random_forest:
       n_estimators: 300

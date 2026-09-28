@@ -435,3 +435,46 @@ def test_multiclass_weights_handle_class_missing_from_validation(base_learners_c
     cfg = {"confidence_weighting": {"enabled": True, "min_weight": 0.05}}
     weights = compute_confidence_weights_multiclass(learners, X_val, y_val, cfg, classes=np.array([0, 1, 2]))
     assert pytest.approx(sum(weights.values()), abs=1e-9) == 1.0
+
+
+# ---------------------------------------------------------------------------
+# Device (GPU) handling
+# ---------------------------------------------------------------------------
+
+from src.ensemble import base_learners as bl
+
+
+def test_resolve_device_cpu_and_invalid():
+    assert bl.resolve_device("cpu") == "cpu"
+    assert bl.resolve_device(None) == "cpu"
+    with pytest.raises(ValueError):
+        bl.resolve_device("tpu")
+
+
+def test_resolve_device_auto_falls_back_without_gpu(monkeypatch):
+    monkeypatch.setattr(bl, "_xgboost_cuda_usable", lambda: False)
+    assert bl.resolve_device("auto") == "cpu"
+
+
+def test_resolve_device_cuda_without_gpu_fails_loudly(monkeypatch):
+    monkeypatch.setattr(bl, "_xgboost_cuda_usable", lambda: False)
+    with pytest.raises(RuntimeError):
+        bl.resolve_device("cuda")
+
+
+def test_resolve_device_uses_gpu_when_usable(monkeypatch):
+    monkeypatch.setattr(bl, "_xgboost_cuda_usable", lambda: True)
+    assert bl.resolve_device("auto") == "cuda"
+    assert bl.resolve_device("cuda") == "cuda"
+
+
+def test_xgboost_gets_resolved_device_other_learners_untouched(base_learners_config, monkeypatch):
+    monkeypatch.setattr(bl, "_xgboost_cuda_usable", lambda: True)
+    monkeypatch.setattr("xgboost.set_config", lambda **kw: None)
+    learners = build_base_learners({**base_learners_config, "device": "auto"})
+    assert learners["xgboost"].get_params()["device"] == "cuda"
+    assert "device" not in learners["random_forest"].get_params()
+
+
+def test_default_device_is_cpu(base_learners_config):
+    assert build_base_learners(base_learners_config)["xgboost"].get_params()["device"] == "cpu"

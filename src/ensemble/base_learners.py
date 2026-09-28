@@ -9,9 +9,18 @@ This module deliberately does NOT combine the learners' outputs — that's
 src/ensemble/stacking.py's job (confidence weighting + meta-learner). This
 module only knows how to build, train, and get predictions from each
 individual learner.
+
+GPU: XGBoost is the one learner here with a drop-in CUDA implementation, so
+configs/models/ensemble.yaml -> ensemble.device ("auto" / "cpu" / "cuda")
+moves it to an NVIDIA GPU. Random Forest (scikit-learn) and the resamplers
+have no GPU implementation and always run on CPU; LightGBM stays on CPU
+because its OpenCL GPU mode needs a special setup and is typically slower at
+these data sizes. GPU and CPU XGBoost produce slightly different models, so
+the resolved device is recorded with every result (see resolve_device).
 """
 
 import logging
+import warnings
 
 import numpy as np
 from lightgbm import LGBMClassifier
@@ -25,6 +34,65 @@ LEARNER_CLASSES = {
     "xgboost": XGBClassifier,
     "lightgbm": LGBMClassifier,
 }
+
+
+_CUDA_CHECK = {}
+
+
+def _xgboost_cuda_usable() -> bool:
+    """True if this XGBoost build can actually train on a CUDA GPU here
+    (a CUDA-enabled wheel AND a visible NVIDIA GPU). Checked once per process
+    with a tiny fit, since XGBoost may silently fall back to CPU."""
+    if "ok" in _CUDA_CHECK:
+        return _CUDA_CHECK["ok"]
+    ok = False
+    try:
+        import xgboost
+
+        if xgboost.build_info().get("USE_CUDA"):
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter("always")
+                X = np.array([[0.0], [1.0], [0.0], [1.0]])
+                XGBClassifier(n_estimators=1, device="cuda").fit(X, [0, 1, 0, 1])
+            fell_back = any("gpu" in str(w.message).lower() or "cuda" in str(w.message).lower() for w in caught)
+            ok = not fell_back
+    except Exception as exc:  # no GPU / driver problem
+        logger.info("CUDA check failed (%s) — XGBoost will use CPU.", exc)
+        ok = False
+    _CUDA_CHECK["ok"] = ok
+    return ok
+
+
+def resolve_device(requested: str = "cpu") -> str:
+    """
+    Turn the configured device into the one XGBoost will actually use.
+
+    Args:
+        requested: "cpu", "cuda" (fail if no usable GPU), or "auto" (GPU if usable, else CPU).
+    Returns:
+        "cpu" or "cuda"
+    """
+    requested = (requested or "cpu").lower()
+    if requested == "cpu":
+        return "cpu"
+    if requested not in ("auto", "cuda"):
+        raise ValueError(f"Unknown device '{requested}' (expected 'auto', 'cpu' or 'cuda').")
+    usable = _xgboost_cuda_usable()
+    if requested == "cuda" and not usable:
+        raise RuntimeError(
+            "ensemble.device is 'cuda' but XGBoost cannot use a CUDA GPU on this machine. Check "
+            "`nvidia-smi` works and that xgboost was installed from PyPI on Linux/Windows (those "
+            "wheels include CUDA; macOS wheels do not), or set device to 'auto'/'cpu'."
+        )
+    device = "cuda" if usable else "cpu"
+    if device == "cuda":
+        # Predicting from CPU numpy arrays with a GPU model makes XGBoost log a
+        # "mismatched devices" performance warning on every call; it is harmless
+        # and would flood the logs of a multi-hour run.
+        import xgboost
+
+        xgboost.set_config(verbosity=0)
+    return device
 
 
 def build_base_learners(config: dict, n_classes: int = 2) -> dict:
@@ -45,6 +113,7 @@ def build_base_learners(config: dict, n_classes: int = 2) -> dict:
         dict: {learner_name: unfitted estimator instance}
     """
     learners_cfg = config["base_learners"]
+    device = resolve_device(config.get("device", "cpu"))
     learners = {}
 
     for name, params in learners_cfg.items():
@@ -59,6 +128,8 @@ def build_base_learners(config: dict, n_classes: int = 2) -> dict:
         clean_params = dict(params)  # copy so we never mutate the config dict
         if name == "xgboost" and n_classes > 2 and clean_params.get("eval_metric") == "aucpr":
             clean_params["eval_metric"] = "mlogloss"
+        if name == "xgboost":
+            clean_params["device"] = device
         learners[name] = cls(**clean_params)
         logger.info("Built base learner '%s' with params: %s", name, clean_params)
 

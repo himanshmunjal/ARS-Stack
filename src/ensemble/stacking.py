@@ -44,6 +44,7 @@ from xgboost import XGBClassifier
 
 from src.ensemble.base_learners import (
     build_base_learners,
+    resolve_device,
     predict_base_learners,
     predict_base_learners_multiclass,
     train_base_learners,
@@ -76,6 +77,7 @@ def build_meta_learner(config: dict, n_classes: int = 2):
         return XGBClassifier(
             random_state=meta_cfg.get("random_state", 42),
             eval_metric="aucpr" if n_classes == 2 else "mlogloss",
+            device=resolve_device(config.get("device", "cpu")),
         )
     else:
         raise ValueError(f"Unknown meta_learner type '{meta_type}' (expected 'logistic_regression' or 'xgboost').")
@@ -257,6 +259,7 @@ class ConfidenceWeightedStackingEnsemble:
         self.cv_folds = config.get("cv_folds", 5)
         self.passthrough = config.get("passthrough", False)
         self.random_state = config.get("meta_learner", {}).get("random_state", 42)
+        self.device_ = resolve_device(config.get("device", "cpu"))  # where XGBoost trains
 
         self.base_learners_ = {}
         self.weights_ = {}

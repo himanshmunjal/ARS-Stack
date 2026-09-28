@@ -29,6 +29,7 @@ from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 
 from src.data.ingest import load_config, load_dataset_config
+from src.ensemble.base_learners import resolve_device
 from src.evaluation.metrics import compute_metrics
 
 logger = logging.getLogger("baseline_reproduction")
@@ -42,7 +43,10 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
 
     ds_cfg = load_dataset_config(args.dataset, args.configs_dir)["dataset"]
-    baseline_cfg = load_config(Path(args.configs_dir) / "models" / "ensemble.yaml")["baseline"]
+    ensemble_yaml = load_config(Path(args.configs_dir) / "models" / "ensemble.yaml")
+    baseline_cfg = ensemble_yaml["baseline"]
+    device = resolve_device(ensemble_yaml["ensemble"].get("device", "cpu"))
+    logger.info("XGBoost device: %s", device)
     target = ds_cfg["target_column"]
     processed_dir = Path(ds_cfg["processed_file"]).parent
 
@@ -60,7 +64,7 @@ def main():
     logger.info("SMOTE: %d -> %d training rows", len(y_train), len(y_res))
 
     rf_cfg = baseline_cfg["models"]["random_forest"]
-    xgb_cfg = baseline_cfg["models"]["xgboost"]
+    xgb_cfg = {**baseline_cfg["models"]["xgboost"], "device": device}
     stack_cfg = baseline_cfg["simple_stacking"]
     models = {
         "RandomForest + SMOTE": RandomForestClassifier(**rf_cfg),
@@ -83,6 +87,9 @@ def main():
     if args.dataset == "creditcard":
         for paper, ref in baseline_cfg["reference_numbers"].items():
             rows.append({"dataset": args.dataset, "model": paper, "source": "literature", **ref})
+    for row in rows:
+        if row["source"] == "this project":
+            row["xgboost_device"] = device
 
     out_path = Path("reports") / f"baseline_results_{args.dataset}.csv"
     out_path.parent.mkdir(parents=True, exist_ok=True)

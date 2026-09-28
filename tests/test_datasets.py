@@ -19,7 +19,7 @@ from src.data.ingest import (
 
 def test_core_and_benchmarks_are_registered():
     assert CORE_DATASETS == ["creditcard", "mammography", "yeast_multiclass"]
-    assert len(BENCHMARK_DATASETS) == 20
+    assert len(BENCHMARK_DATASETS) == 25
     assert "mammography" not in BENCHMARK_DATASETS and "yeast_me2" not in BENCHMARK_DATASETS
     for name in BENCHMARK_DATASETS:
         assert DATASET_REGISTRY[name] is ingest_imblearn_benchmark

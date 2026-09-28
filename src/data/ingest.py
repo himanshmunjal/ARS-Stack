@@ -14,7 +14,7 @@ Usage:
     python -m src.data.ingest --dataset creditcard
     python -m src.data.ingest --dataset mammography
     python -m src.data.ingest --dataset yeast_multiclass
-    python -m src.data.ingest --dataset benchmarks     # the 20 benchmark datasets
+    python -m src.data.ingest --dataset benchmarks     # the 25 benchmark datasets
     python -m src.data.ingest --dataset all            # core + benchmarks
 """
 

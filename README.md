@@ -36,9 +36,9 @@ GitHub Actions (CI), FastAPI (model serving).
 | Mammography | Binary, moderate-high | ≈1:42 | imbalanced-learn / OpenML |
 | Yeast (UCI) | Multiclass, 10 classes | up to ≈1:92 | UCI ML Repository |
 
-Plus **20 binary benchmark datasets** from imbalanced-learn's collection
-(`configs/datasets/benchmarks.yaml`: imbalance ratios 8.6–130, 330–18.7k rows,
-7–103 features), used in the repeated-CV study so conclusions rest on a
+Plus **25 binary benchmark datasets** from imbalanced-learn's collection
+(`configs/datasets/benchmarks.yaml`: imbalance ratios 8.6–130, 330–145k rows,
+7–617 features; every dataset in the collection except the two that overlap the core datasets), used in the repeated-CV study so conclusions rest on a
 cross-dataset comparison (Friedman test + post-hoc; Demšar 2006), not only on
 three case studies. Exact duplicate rows are removed from every dataset before
 splitting (`configs/base.yaml -> preprocessing.drop_duplicates`); this removes
@@ -70,7 +70,7 @@ bash scripts/run_all.sh            # full run (~18-24 h on 8 cores; re-run the s
 
 On a new machine you only need: Python >= 3.11, internet, and one file.
 The script creates `venv/`, installs `requirements.txt`, downloads mammography,
-yeast and the 20 benchmark datasets, keeps the machine awake (macOS/Linux)
+yeast and the 25 benchmark datasets, keeps the machine awake (macOS/Linux)
 and logs to `reports/run_all.log`. The one file it cannot download is
 `data/raw/creditcard/creditcard.csv` (Kaggle login required) — copy it from
 the original machine or download it from
@@ -86,7 +86,7 @@ mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri sqlite:///mlflow.
 # 1. Tests
 pytest tests/ -q
 
-# 2. Data: ingest -> clean -> dedup -> stratified split -> scale, + the 20 benchmarks (DVC pipeline)
+# 2. Data: ingest -> clean -> dedup -> stratified split -> scale, + the 25 benchmarks (DVC pipeline)
 dvc repro
 
 # 3. Literature baseline reproduction (plain SMOTE + RF / XGBoost / simple stacking)
@@ -101,7 +101,7 @@ python -m src.pipeline --dataset creditcard --resampler smote      # also: adasy
 
 # 5. Repeated-CV ablation study + significance tests (the numbers for the paper)
 python -m src.experiments.run_ablation --quick     # smoke test -> reports/ablation_results_quick/
-python -m src.experiments.run_ablation             # full: 23 datasets x 9 variants x 5 folds x 3 repeats
+python -m src.experiments.run_ablation             # full: 28 datasets x 9 variants x 5 folds x 3 repeats
 
 # 6. Serve the saved models
 uvicorn src.serving.app:app --port 8000

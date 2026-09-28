@@ -194,6 +194,7 @@ def run_pipeline(
         "combiner": model.combiner,
         "confidence_weighting_enabled": ensemble_cfg["confidence_weighting"]["enabled"],
         "threshold_tuning": ensemble_cfg.get("threshold_tuning", {}).get("enabled", False),
+        "xgboost_device": model.device_,
     }
     log_metrics = dict(metrics)
     if task_type == "binary":

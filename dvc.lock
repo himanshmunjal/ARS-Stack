@@ -140,15 +140,15 @@ stages:
     deps:
     - path: configs/datasets/benchmarks.yaml
       hash: md5
-      md5: b6e22b837d973c0342a186cd254b2495
-      size: 1693
+      md5: 46485a115428f365c806f87689695829
+      size: 1703
     - path: src/data/ingest.py
       hash: md5
-      md5: e24e68b4eaa35637a89505f58caba3f6
+      md5: d3dbe6d28976b40b3ae5bf8df793899f
       size: 14469
     outs:
     - path: data/raw/benchmarks
       hash: md5
-      md5: b4c45248d0f13d79fdcdd96432d78ed5.dir
-      size: 16263593
-      nfiles: 20
+      md5: b1094245c695f9aef83a14c488b14f89.dir
+      size: 158326526
+      nfiles: 25

@@ -3,7 +3,7 @@ src/experiments/run_ablation.py
 
 The Week 8-9 evaluation (project plan, section 9) as one resumable script:
 repeated stratified K-fold CV of ARS-Stack against every baseline/ablation
-variant on every dataset — the 3 core datasets plus the 20 imbalanced-learn
+variant on every dataset — the 3 core datasets plus the 25 imbalanced-learn
 benchmarks (configs/datasets/benchmarks.yaml) — followed by
     - per dataset: Nadeau-Bengio corrected resampled t-test (primary; accounts
       for overlapping CV training sets) and Wilcoxon signed-rank, each
@@ -55,7 +55,7 @@ results (RESULT_AFFECTING_CODE) invalidates saved folds (you're told to pass
 
 Usage:
     python -m src.experiments.run_ablation --quick                 # smoke test, ~minutes
-    python -m src.experiments.run_ablation                         # full run: all 23 datasets, 9 variants
+    python -m src.experiments.run_ablation                         # full run: all 28 datasets, 9 variants
     python -m src.experiments.run_ablation --datasets core         # or: benchmarks, or dataset names
     python -m src.experiments.run_ablation --variants ars_stack plain_smote equal_average
     python -m src.experiments.run_ablation --summarize-only        # rebuild tables/plot from saved folds
@@ -76,6 +76,7 @@ from sklearn.preprocessing import StandardScaler
 
 from src.data.ingest import CORE_DATASETS, DATASET_GROUPS, DATASET_REGISTRY, expand_dataset_names, load_config
 from src.data.preprocess import load_clean_dataset, scaling_columns
+from src.ensemble.base_learners import resolve_device
 from src.ensemble.stacking import ConfidenceWeightedStackingEnsemble
 from src.evaluation.metrics import SUPPORTED_METRICS, compute_metrics
 from src.evaluation.significance_test import (
@@ -191,6 +192,13 @@ def _provenance() -> dict:
         except PackageNotFoundError:
             packages[pkg] = None
     status = git("status", "--porcelain", "--", "src", "configs")
+    try:
+        gpu = subprocess.run(
+            ["nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader"],
+            capture_output=True, text=True, check=True, timeout=10,
+        ).stdout.strip() or None
+    except Exception:
+        gpu = None
     return {
         "git_commit": git("rev-parse", "HEAD"),
         "git_uncommitted_changes_in_src_or_configs": bool(status) if status is not None else None,
@@ -199,6 +207,7 @@ def _provenance() -> dict:
         "platform": platform.platform(),
         "machine": platform.machine(),
         "cpu_count": __import__("os").cpu_count(),
+        "gpu": gpu,
     }
 
 
@@ -688,6 +697,12 @@ def main():
             "config_fingerprint": _fingerprint(args.configs_dir, "*.yaml"),
             "code_fingerprint": _code_fingerprint(),
         }
+        # Part of the resume key: GPU and CPU XGBoost give slightly different
+        # numbers, so folds from different devices must never be mixed.
+        settings["xgboost_device"] = resolve_device(
+            load_config(Path(args.configs_dir) / "models" / "ensemble.yaml")["ensemble"].get("device", "cpu")
+        )
+        logger.info("XGBoost device: %s (Random Forest, LightGBM and resampling run on CPU)", settings["xgboost_device"])
         cfgs = load_model_configs(args.configs_dir, settings["n_estimators_override"])
 
         provenance = _provenance()
