@@ -1,0 +1,40 @@
+{
+  "dataset": "creditcard",
+  "resampler": "smote",
+  "metrics": {
+    "f1": 0.8170731707317073,
+    "auc_pr": 0.8207834861354826,
+    "g_mean": 0.8397846505921386,
+    "mcc": 0.8273077208318089
+  },
+  "decision_threshold": 0.8785859943432925,
+  "base_learner_weights": {
+    "random_forest": 0.3700215996655734,
+    "xgboost": 0.3724329276307733,
+    "lightgbm": 0.25754547270365347
+  },
+  "params": {
+    "dataset": "creditcard",
+    "task_type": "binary",
+    "resampler": "smote",
+    "target_balance_ratio": 1.0,
+    "selection_mode": "absolute",
+    "combiner": "weighted_average",
+    "confidence_weighting_enabled": true,
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
+  },
+  "resampling_report": {
+    "mode": "global_smote",
+    "resampler_used": "smote",
+    "target_balance_ratio": 1.0,
+    "original_class_counts": {
+      "0": 198276,
+      "1": 331
+    },
+    "final_class_counts": {
+      "0": 198276,
+      "1": 198276
+    }
+  }
+}

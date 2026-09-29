@@ -1,0 +1,56 @@
+{
+  "dataset": "yeast_multiclass",
+  "resampler": "smote",
+  "metrics": {
+    "f1": 0.5143869385676365,
+    "auc_pr": 0.6684728252592571,
+    "g_mean": 0.7006542352376911,
+    "mcc": 0.5332557197784574
+  },
+  "decision_threshold": null,
+  "base_learner_weights": {
+    "random_forest": 0.3437616900988285,
+    "xgboost": 0.3337757761984468,
+    "lightgbm": 0.3224625337027246
+  },
+  "params": {
+    "dataset": "yeast_multiclass",
+    "task_type": "multiclass",
+    "resampler": "smote",
+    "target_balance_ratio": 1.0,
+    "selection_mode": "absolute",
+    "combiner": "weighted_average",
+    "confidence_weighting_enabled": true,
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
+  },
+  "resampling_report": {
+    "mode": "global_smote",
+    "resampler_used": "smote",
+    "target_balance_ratio": 1.0,
+    "original_class_counts": {
+      "0": 306,
+      "1": 3,
+      "2": 24,
+      "3": 30,
+      "4": 36,
+      "5": 114,
+      "6": 171,
+      "7": 297,
+      "8": 14,
+      "9": 21
+    },
+    "final_class_counts": {
+      "0": 306,
+      "1": 306,
+      "2": 306,
+      "3": 306,
+      "4": 306,
+      "5": 306,
+      "6": 306,
+      "7": 306,
+      "8": 306,
+      "9": 306
+    }
+  }
+}

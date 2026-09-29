@@ -1,0 +1,4 @@
+dataset,model,source,f1,auc_pr,g_mean,mcc,xgboost_device
+mammography,RandomForest + SMOTE,this project,0.6154,0.6064,0.7866,0.6023,cuda
+mammography,XGBoost + SMOTE,this project,0.6296,0.6389,0.8103,0.6175,cuda
+mammography,"Simple Stacking (RF+XGB, LR meta) + SMOTE",this project,0.6471,0.6361,0.7996,0.6352,cuda

@@ -1,0 +1,30 @@
+{
+  "git_commit": "8826c3be7fbaa8bf7016548cf0a3fe1fa4cf712e",
+  "git_uncommitted_changes_in_src_or_configs": false,
+  "python": "3.11.9",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0",
+    "imbalanced-learn": "0.14.2",
+    "xgboost": "3.2.0",
+    "lightgbm": "4.6.0"
+  },
+  "platform": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "cpu_count": 16,
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 595.97, 4096 MiB",
+  "settings": {
+    "n_splits": 5,
+    "n_repeats": 3,
+    "val_fraction": 0.15,
+    "seed": 42,
+    "quick": false,
+    "max_rows": null,
+    "n_estimators_override": null,
+    "config_fingerprint": "496320f3d7f94a04",
+    "code_fingerprint": "f8ccca65a39aacb6",
+    "xgboost_device": "cuda"
+  }
+}

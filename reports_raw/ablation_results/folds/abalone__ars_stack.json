@@ -1,0 +1,909 @@
+{
+  "settings": {
+    "dataset": "abalone",
+    "variant": "ars_stack",
+    "variant_spec": {
+      "resampler": "adaptive"
+    },
+    "n_splits": 5,
+    "n_repeats": 3,
+    "val_fraction": 0.15,
+    "seed": 42,
+    "quick": false,
+    "max_rows": null,
+    "n_estimators_override": null,
+    "config_fingerprint": "496320f3d7f94a04",
+    "code_fingerprint": "f8ccca65a39aacb6",
+    "xgboost_device": "cuda"
+  },
+  "provenance": {
+    "git_commit": "8826c3be7fbaa8bf7016548cf0a3fe1fa4cf712e",
+    "git_uncommitted_changes_in_src_or_configs": false,
+    "python": "3.11.9",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.9.0",
+      "imbalanced-learn": "0.14.2",
+      "xgboost": "3.2.0",
+      "lightgbm": "4.6.0"
+    },
+    "platform": "Windows-10-10.0.26200-SP0",
+    "machine": "AMD64",
+    "cpu_count": 16,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 595.97, 4096 MiB"
+  },
+  "folds": [
+    {
+      "metrics": {
+        "f1": 0.35714285714285715,
+        "auc_pr": 0.27750509858768246,
+        "g_mean": 0.753854852221555,
+        "mcc": 0.31987950795304326
+      },
+      "threshold": 0.1368804239036272,
+      "weights": {
+        "random_forest": 0.3293663090266438,
+        "xgboost": 0.34631472918382805,
+        "lightgbm": 0.32431896178952807
+      },
+      "n_train_resampled": 4950,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2522,
+        "final_majority_count": 2428,
+        "total_majority_removed": 145,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 184,
+            "overlap_score": 0.5951,
+            "density_ratio": 1.3518,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1588
+          },
+          {
+            "class": 1,
+            "cluster_size": 55,
+            "overlap_score": 0.7582,
+            "density_ratio": 0.7038,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 454
+          },
+          {
+            "class": 1,
+            "cluster_size": 27,
+            "overlap_score": 0.7889,
+            "density_ratio": 0.5219,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 219
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.3
+      },
+      "fold": 0
+    },
+    {
+      "metrics": {
+        "f1": 0.37656903765690375,
+        "auc_pr": 0.33621469081733096,
+        "g_mean": 0.6950439790421195,
+        "mcc": 0.3105972522446795
+      },
+      "threshold": 0.3025905119403016,
+      "weights": {
+        "random_forest": 0.33847979706353415,
+        "xgboost": 0.33761295979167566,
+        "lightgbm": 0.32390724314479014
+      },
+      "n_train_resampled": 5009,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2548,
+        "final_majority_count": 2461,
+        "total_majority_removed": 113,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 190,
+            "overlap_score": 0.6289,
+            "density_ratio": 1.3729,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1651
+          },
+          {
+            "class": 1,
+            "cluster_size": 27,
+            "overlap_score": 0.7926,
+            "density_ratio": 0.4962,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 225
+          },
+          {
+            "class": 1,
+            "cluster_size": 48,
+            "overlap_score": 0.7812,
+            "density_ratio": 0.6642,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 409
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.4
+      },
+      "fold": 1
+    },
+    {
+      "metrics": {
+        "f1": 0.3575418994413408,
+        "auc_pr": 0.31823843275203295,
+        "g_mean": 0.6106241368749089,
+        "mcc": 0.28478888910402156
+      },
+      "threshold": 0.5732886330903869,
+      "weights": {
+        "random_forest": 0.3830550562169904,
+        "xgboost": 0.3015278620680695,
+        "lightgbm": 0.31541708171494015
+      },
+      "n_train_resampled": 4934,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2529,
+        "final_majority_count": 2405,
+        "total_majority_removed": 169,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 176,
+            "overlap_score": 0.6455,
+            "density_ratio": 1.364,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1519
+          },
+          {
+            "class": 1,
+            "cluster_size": 25,
+            "overlap_score": 0.736,
+            "density_ratio": 0.8415,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 206
+          },
+          {
+            "class": 1,
+            "cluster_size": 32,
+            "overlap_score": 0.775,
+            "density_ratio": 0.6434,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 270
+          },
+          {
+            "class": 1,
+            "cluster_size": 33,
+            "overlap_score": 0.8152,
+            "density_ratio": 0.5635,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 270
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.6
+      },
+      "fold": 2
+    },
+    {
+      "metrics": {
+        "f1": 0.3464566929133858,
+        "auc_pr": 0.2706840891630414,
+        "g_mean": 0.6824504206921626,
+        "mcc": 0.27807380724249625
+      },
+      "threshold": 0.3131877592364297,
+      "weights": {
+        "random_forest": 0.35278392284379895,
+        "xgboost": 0.32198926777115044,
+        "lightgbm": 0.3252268093850506
+      },
+      "n_train_resampled": 4908,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2527,
+        "final_majority_count": 2381,
+        "total_majority_removed": 193,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 167,
+            "overlap_score": 0.6138,
+            "density_ratio": 1.4441,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1441
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7559,
+            "density_ratio": 0.5651,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 288
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7853,
+            "density_ratio": 0.554,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 280
+          },
+          {
+            "class": 1,
+            "cluster_size": 31,
+            "overlap_score": 0.7387,
+            "density_ratio": 0.9318,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 255
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.6,
+        "fit": 2.3
+      },
+      "fold": 3
+    },
+    {
+      "metrics": {
+        "f1": 0.3504273504273504,
+        "auc_pr": 0.23688383820348982,
+        "g_mean": 0.6676735951584287,
+        "mcc": 0.2790299797633766
+      },
+      "threshold": 0.412738819553053,
+      "weights": {
+        "random_forest": 0.34950469159739983,
+        "xgboost": 0.34213645531944364,
+        "lightgbm": 0.30835885308315664
+      },
+      "n_train_resampled": 5025,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2545,
+        "final_majority_count": 2480,
+        "total_majority_removed": 94,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 185,
+            "overlap_score": 0.6065,
+            "density_ratio": 1.383,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1602
+          },
+          {
+            "class": 1,
+            "cluster_size": 32,
+            "overlap_score": 0.8,
+            "density_ratio": 0.4846,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 268
+          },
+          {
+            "class": 1,
+            "cluster_size": 49,
+            "overlap_score": 0.7082,
+            "density_ratio": 0.7401,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 413
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.4
+      },
+      "fold": 4
+    },
+    {
+      "metrics": {
+        "f1": 0.32727272727272727,
+        "auc_pr": 0.2699937255928183,
+        "g_mean": 0.5645828597833922,
+        "mcc": 0.2543253548646987
+      },
+      "threshold": 0.6075918657716171,
+      "weights": {
+        "random_forest": 0.33326976372949085,
+        "xgboost": 0.329823622469178,
+        "lightgbm": 0.3369066138013311
+      },
+      "n_train_resampled": 4980,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2533,
+        "final_majority_count": 2447,
+        "total_majority_removed": 126,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 55,
+            "overlap_score": 0.7436,
+            "density_ratio": 0.7419,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 459
+          },
+          {
+            "class": 1,
+            "cluster_size": 181,
+            "overlap_score": 0.6343,
+            "density_ratio": 1.3639,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1563
+          },
+          {
+            "class": 1,
+            "cluster_size": 30,
+            "overlap_score": 0.7833,
+            "density_ratio": 0.5071,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 248
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.7
+      },
+      "fold": 5
+    },
+    {
+      "metrics": {
+        "f1": 0.4074074074074074,
+        "auc_pr": 0.3456334438913741,
+        "g_mean": 0.7986829283341256,
+        "mcc": 0.3849456689211387
+      },
+      "threshold": 0.2020206861343365,
+      "weights": {
+        "random_forest": 0.34597162138844195,
+        "xgboost": 0.34572345729940657,
+        "lightgbm": 0.3083049213121514
+      },
+      "n_train_resampled": 4970,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2528,
+        "final_majority_count": 2442,
+        "total_majority_removed": 132,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 178,
+            "overlap_score": 0.6365,
+            "density_ratio": 1.381,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1542
+          },
+          {
+            "class": 1,
+            "cluster_size": 53,
+            "overlap_score": 0.766,
+            "density_ratio": 0.7469,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 441
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7971,
+            "density_ratio": 0.5219,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 281
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.6
+      },
+      "fold": 6
+    },
+    {
+      "metrics": {
+        "f1": 0.35135135135135137,
+        "auc_pr": 0.24852258996625376,
+        "g_mean": 0.6562372223075097,
+        "mcc": 0.27831487755493795
+      },
+      "threshold": 0.37966557402919315,
+      "weights": {
+        "random_forest": 0.3487093541667141,
+        "xgboost": 0.3183275163479375,
+        "lightgbm": 0.3329631294853484
+      },
+      "n_train_resampled": 5040,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2547,
+        "final_majority_count": 2493,
+        "total_majority_removed": 81,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 26,
+            "overlap_score": 0.8346,
+            "density_ratio": 0.4576,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 218
+          },
+          {
+            "class": 1,
+            "cluster_size": 190,
+            "overlap_score": 0.6095,
+            "density_ratio": 1.4106,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1644
+          },
+          {
+            "class": 1,
+            "cluster_size": 50,
+            "overlap_score": 0.756,
+            "density_ratio": 0.6713,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 421
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.6,
+        "fit": 2.6
+      },
+      "fold": 7
+    },
+    {
+      "metrics": {
+        "f1": 0.3794466403162055,
+        "auc_pr": 0.2936041693591318,
+        "g_mean": 0.7156417224357193,
+        "mcc": 0.3200449139520585
+      },
+      "threshold": 0.28493217711188357,
+      "weights": {
+        "random_forest": 0.3756041465120241,
+        "xgboost": 0.3361334316868024,
+        "lightgbm": 0.2882624218011735
+      },
+      "n_train_resampled": 5000,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2545,
+        "final_majority_count": 2455,
+        "total_majority_removed": 119,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 185,
+            "overlap_score": 0.6005,
+            "density_ratio": 1.3565,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1599
+          },
+          {
+            "class": 1,
+            "cluster_size": 52,
+            "overlap_score": 0.7538,
+            "density_ratio": 0.7329,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 434
+          },
+          {
+            "class": 1,
+            "cluster_size": 29,
+            "overlap_score": 0.7862,
+            "density_ratio": 0.4943,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 247
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.6
+      },
+      "fold": 8
+    },
+    {
+      "metrics": {
+        "f1": 0.36177474402730375,
+        "auc_pr": 0.23826547122821454,
+        "g_mean": 0.7308044388661096,
+        "mcc": 0.3098028619912252
+      },
+      "threshold": 0.20449019358477574,
+      "weights": {
+        "random_forest": 0.3850160450913481,
+        "xgboost": 0.3013887283121642,
+        "lightgbm": 0.3135952265964877
+      },
+      "n_train_resampled": 4954,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2539,
+        "final_majority_count": 2415,
+        "total_majority_removed": 159,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 26,
+            "overlap_score": 0.7846,
+            "density_ratio": 0.5104,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 218
+          },
+          {
+            "class": 1,
+            "cluster_size": 179,
+            "overlap_score": 0.6201,
+            "density_ratio": 1.3997,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1547
+          },
+          {
+            "class": 1,
+            "cluster_size": 27,
+            "overlap_score": 0.7444,
+            "density_ratio": 0.8001,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 224
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7735,
+            "density_ratio": 0.6227,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 286
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.6,
+        "fit": 2.4
+      },
+      "fold": 9
+    },
+    {
+      "metrics": {
+        "f1": 0.32989690721649484,
+        "auc_pr": 0.29017755312777876,
+        "g_mean": 0.6039806612789616,
+        "mcc": 0.2519383344464537
+      },
+      "threshold": 0.4833326415654056,
+      "weights": {
+        "random_forest": 0.3443063545635315,
+        "xgboost": 0.342694130907341,
+        "lightgbm": 0.31299951452912755
+      },
+      "n_train_resampled": 4968,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2537,
+        "final_majority_count": 2431,
+        "total_majority_removed": 142,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 174,
+            "overlap_score": 0.6201,
+            "density_ratio": 1.3796,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1502
+          },
+          {
+            "class": 1,
+            "cluster_size": 58,
+            "overlap_score": 0.7483,
+            "density_ratio": 0.7589,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 484
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7882,
+            "density_ratio": 0.5359,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 288
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.5
+      },
+      "fold": 10
+    },
+    {
+      "metrics": {
+        "f1": 0.41216216216216217,
+        "auc_pr": 0.33335704057497656,
+        "g_mean": 0.7829619701385737,
+        "mcc": 0.3777117405733032
+      },
+      "threshold": 0.18874229398440198,
+      "weights": {
+        "random_forest": 0.33881157794969974,
+        "xgboost": 0.31843175246296573,
+        "lightgbm": 0.3427566695873346
+      },
+      "n_train_resampled": 4983,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2545,
+        "final_majority_count": 2438,
+        "total_majority_removed": 136,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 28,
+            "overlap_score": 0.7714,
+            "density_ratio": 0.6388,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 237
+          },
+          {
+            "class": 1,
+            "cluster_size": 183,
+            "overlap_score": 0.6202,
+            "density_ratio": 1.3469,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1588
+          },
+          {
+            "class": 1,
+            "cluster_size": 26,
+            "overlap_score": 0.8077,
+            "density_ratio": 0.4652,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 225
+          },
+          {
+            "class": 1,
+            "cluster_size": 28,
+            "overlap_score": 0.7179,
+            "density_ratio": 0.7762,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 234
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.3
+      },
+      "fold": 11
+    },
+    {
+      "metrics": {
+        "f1": 0.3504531722054381,
+        "auc_pr": 0.26912773235253423,
+        "g_mean": 0.7429967489518509,
+        "mcc": 0.3077544700509557
+      },
+      "threshold": 0.16644033104766143,
+      "weights": {
+        "random_forest": 0.3484092566723566,
+        "xgboost": 0.3432739527155872,
+        "lightgbm": 0.3083167906120563
+      },
+      "n_train_resampled": 4997,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2541,
+        "final_majority_count": 2456,
+        "total_majority_removed": 118,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 190,
+            "overlap_score": 0.6137,
+            "density_ratio": 1.3344,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1640
+          },
+          {
+            "class": 1,
+            "cluster_size": 47,
+            "overlap_score": 0.7745,
+            "density_ratio": 0.6671,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 397
+          },
+          {
+            "class": 1,
+            "cluster_size": 29,
+            "overlap_score": 0.8,
+            "density_ratio": 0.5455,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 238
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.4
+      },
+      "fold": 12
+    },
+    {
+      "metrics": {
+        "f1": 0.3520408163265306,
+        "auc_pr": 0.3141745964826377,
+        "g_mean": 0.7735070649676855,
+        "mcc": 0.3370161692578751
+      },
+      "threshold": 0.08799636449282311,
+      "weights": {
+        "random_forest": 0.34746656231292894,
+        "xgboost": 0.32282311901890837,
+        "lightgbm": 0.32971031866816264
+      },
+      "n_train_resampled": 4986,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2536,
+        "final_majority_count": 2450,
+        "total_majority_removed": 124,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 32,
+            "overlap_score": 0.8063,
+            "density_ratio": 0.5437,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 266
+          },
+          {
+            "class": 1,
+            "cluster_size": 183,
+            "overlap_score": 0.5951,
+            "density_ratio": 1.3723,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1580
+          },
+          {
+            "class": 1,
+            "cluster_size": 51,
+            "overlap_score": 0.7627,
+            "density_ratio": 0.6911,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 428
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.5,
+        "fit": 2.2
+      },
+      "fold": 13
+    },
+    {
+      "metrics": {
+        "f1": 0.43537414965986393,
+        "auc_pr": 0.30232081326649796,
+        "g_mean": 0.8097900443928022,
+        "mcc": 0.4118306886454514
+      },
+      "threshold": 0.17807849872529524,
+      "weights": {
+        "random_forest": 0.3234844808995827,
+        "xgboost": 0.34759167539571784,
+        "lightgbm": 0.32892384370469946
+      },
+      "n_train_resampled": 4935,
+      "resampling": {
+        "mode": "adaptive",
+        "final_minority_count": 2526,
+        "final_majority_count": 2409,
+        "total_majority_removed": 165,
+        "clusters": [
+          {
+            "class": 1,
+            "cluster_size": 178,
+            "overlap_score": 0.6354,
+            "density_ratio": 1.4173,
+            "resampler_chosen": "smote_tomek",
+            "resampler_used": "smote_tomek",
+            "n_synthetic_generated": 1542
+          },
+          {
+            "class": 1,
+            "cluster_size": 28,
+            "overlap_score": 0.7571,
+            "density_ratio": 0.5566,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 230
+          },
+          {
+            "class": 1,
+            "cluster_size": 26,
+            "overlap_score": 0.7423,
+            "density_ratio": 0.7717,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 212
+          },
+          {
+            "class": 1,
+            "cluster_size": 34,
+            "overlap_score": 0.7794,
+            "density_ratio": 0.5693,
+            "resampler_chosen": "smote_enn",
+            "resampler_used": "smote_enn",
+            "n_synthetic_generated": 280
+          }
+        ]
+      },
+      "seconds": {
+        "resample": 0.6,
+        "fit": 2.5
+      },
+      "fold": 14
+    }
+  ]
+}
