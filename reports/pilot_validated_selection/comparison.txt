@@ -1,0 +1,68 @@
+datasets with complete pilot folds: 12
+
+GPU vs CPU noise (no_resampling, same folds): mean |dAUC-PR| 0.0069, max 0.0467
+
+== auc_pr: mean over 12 datasets / average rank (1 = best) ==
+                 mean  rank
+variant                    
+no_resampling  0.5301  2.67
+smote_select   0.5307  2.83
+ars_select     0.5307  2.92
+plain_smote    0.5290  3.08
+ars_stack      0.5212  3.50
+  ars_select vs ars_stack     : mean diff +0.0095  wins/ties/losses 7/0/5  Wilcoxon p=0.176
+  ars_select vs plain_smote   : mean diff +0.0017  wins/ties/losses 7/0/5  Wilcoxon p=0.569
+  ars_select vs no_resampling : mean diff +0.0006  wins/ties/losses 5/0/7  Wilcoxon p=1.000
+  ars_select vs smote_select  : mean diff -0.0000  wins/ties/losses 5/2/5  Wilcoxon p=0.695
+
+== f1: mean over 12 datasets / average rank (1 = best) ==
+                 mean  rank
+variant                    
+smote_select   0.4951  2.71
+ars_select     0.4921  2.79
+ars_stack      0.4920  2.92
+no_resampling  0.4919  2.92
+plain_smote    0.4854  3.67
+  ars_select vs ars_stack     : mean diff +0.0001  wins/ties/losses 6/0/6  Wilcoxon p=0.970
+  ars_select vs plain_smote   : mean diff +0.0067  wins/ties/losses 8/0/4  Wilcoxon p=0.569
+  ars_select vs no_resampling : mean diff +0.0002  wins/ties/losses 6/1/5  Wilcoxon p=0.520
+  ars_select vs smote_select  : mean diff -0.0030  wins/ties/losses 5/2/5  Wilcoxon p=0.770
+
+== mcc: mean over 12 datasets / average rank (1 = best) ==
+                 mean  rank
+variant                    
+ars_select     0.4669  2.62
+smote_select   0.4705  2.62
+no_resampling  0.4696  2.92
+ars_stack      0.4651  3.08
+plain_smote    0.4602  3.75
+  ars_select vs ars_stack     : mean diff +0.0017  wins/ties/losses 7/0/5  Wilcoxon p=0.733
+  ars_select vs plain_smote   : mean diff +0.0067  wins/ties/losses 8/0/4  Wilcoxon p=0.470
+  ars_select vs no_resampling : mean diff -0.0028  wins/ties/losses 7/1/4  Wilcoxon p=0.765
+  ars_select vs smote_select  : mean diff -0.0036  wins/ties/losses 5/2/5  Wilcoxon p=0.770
+
+== g_mean: mean over 12 datasets / average rank (1 = best) ==
+                 mean  rank
+variant                    
+smote_select   0.6989  2.46
+ars_select     0.6907  2.79
+no_resampling  0.6944  2.92
+ars_stack      0.6937  3.08
+plain_smote    0.6810  3.75
+  ars_select vs ars_stack     : mean diff -0.0030  wins/ties/losses 7/0/5  Wilcoxon p=0.970
+  ars_select vs plain_smote   : mean diff +0.0097  wins/ties/losses 8/0/4  Wilcoxon p=0.424
+  ars_select vs no_resampling : mean diff -0.0036  wins/ties/losses 6/1/5  Wilcoxon p=0.898
+  ars_select vs smote_select  : mean diff -0.0082  wins/ties/losses 4/2/6  Wilcoxon p=0.770
+
+== choices made by the selectors (count over folds) ==
+variant        ars_select  smote_select
+choice                                 
+adaptive@0.1            8             0
+adaptive@0.25           7             0
+adaptive@0.5            8             0
+adaptive@1.0            8             0
+none@nan                9            13
+smote@0.1              10            13
+smote@0.25              2             7
+smote@0.5               6            14
+smote@1.0               2            13

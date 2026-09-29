@@ -30,8 +30,13 @@ from sklearn.metrics import silhouette_score
 logger = logging.getLogger("clustering")
 
 
-def _auto_select_k(X: np.ndarray, k_range, random_state: int) -> int:
-    """Pick k via best silhouette score over the given range of candidate k values."""
+def _auto_select_k(X: np.ndarray, k_range, random_state: int, min_silhouette: float = None) -> int:
+    """
+    Pick k via best silhouette score over the given range of candidate k values.
+    If min_silhouette is set and even the best split scores below it, the
+    minority class has no clear cluster structure: return k=1 instead of
+    forcing a split (k_range starts at 2, so otherwise one is always forced).
+    """
     best_k, best_score = k_range[0], -1.0
     for k in k_range:
         if k >= len(X):
@@ -42,6 +47,9 @@ def _auto_select_k(X: np.ndarray, k_range, random_state: int) -> int:
         score = silhouette_score(X, labels)
         if score > best_score:
             best_k, best_score = k, score
+    if min_silhouette is not None and best_score < min_silhouette:
+        logger.info("Best silhouette %.3f < min_silhouette %.2f -> keeping a single cluster", best_score, min_silhouette)
+        return 1
     logger.info("Auto-selected k=%d (silhouette=%.3f)", best_k, best_score)
     return best_k
 
@@ -116,7 +124,7 @@ def cluster_minority_class(X_minority: np.ndarray, config: dict) -> np.ndarray:
         kmeans_cfg = config.get("kmeans", {})
         if kmeans_cfg.get("auto_k", True):
             k_range = range(kmeans_cfg.get("k_min", 2), kmeans_cfg.get("k_max", 6) + 1)
-            k = _auto_select_k(X_minority, k_range, random_state)
+            k = _auto_select_k(X_minority, k_range, random_state, kmeans_cfg.get("min_silhouette"))
         else:
             k = kmeans_cfg.get("n_clusters", 3)
         k = max(1, min(k, n_samples - 1))  # can't have more clusters than samples-1

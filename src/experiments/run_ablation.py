@@ -88,10 +88,11 @@ from src.evaluation.significance_test import (
     wilcoxon_test,
 )
 from src.resampling.apply_resampling import resample_training_set
+from src.resampling.selection import select_resampling
 
 logger = logging.getLogger("run_ablation")
 
-REFERENCE_VARIANT = "ars_stack"
+REFERENCE_VARIANT = "ars_stack"  # overridable with --reference
 
 VARIANTS = {
     "ars_stack": {"resampler": "adaptive"},
@@ -103,6 +104,10 @@ VARIANTS = {
     "plain_smote_tomek": {"resampler": "smote_tomek"},
     "plain_smote_enn": {"resampler": "smote_enn"},
     "no_resampling": {"resampler": "none"},
+    # Validated selection (src/resampling/selection.py): method + amount chosen
+    # by inner CV on the training data, "no resampling" always a candidate.
+    "ars_select": {"resampler": "select", "select_from": ["adaptive", "smote"]},
+    "smote_select": {"resampler": "select", "select_from": ["smote"]},
 }
 
 # What each comparison against ars_stack isolates (for summary.md).
@@ -115,6 +120,8 @@ COMPARISON_MEANING = {
     "plain_smote_tomek": "adaptive selection vs global SMOTE-Tomek",
     "plain_smote_enn": "adaptive selection vs global SMOTE-ENN",
     "no_resampling": "any resampling vs none",
+    "ars_select": "rule-based vs validated selection (method + amount)",
+    "smote_select": "validated selection without the adaptive (clustering) option",
 }
 
 QUICK_SETTINGS = {"n_splits": 3, "n_repeats": 1, "n_estimators": 50, "max_rows": 20000}
@@ -231,7 +238,8 @@ def _scale_in_fold(X_tr, X_val, X_test, feature_columns, ds_cfg):
 
 def _resampling_summary(report: dict) -> dict:
     """Compact, JSON-safe digest of a resampling report for the fold file."""
-    summary = {k: report[k] for k in ("mode", "final_class_counts", "original_class_counts") if k in report}
+    summary = {k: report[k] for k in ("mode", "final_class_counts", "original_class_counts",
+                                      "selected", "selection_scores") if k in report}
     for k in ("final_minority_count", "final_majority_count", "total_majority_removed"):
         if k in report:
             summary[k] = report[k]
@@ -261,9 +269,26 @@ def run_fold(X_outer_train, y_outer_train, X_test, y_test, feature_columns, ds_c
     X_tr, X_val, X_test = _scale_in_fold(X_tr, X_val, X_test, feature_columns, ds_cfg)
 
     t0 = time.time()
+    resamplers_cfg, method, selection = cfgs["resamplers"], spec["resampler"], None
+    if method == "select":
+        vs = resamplers_cfg.get("validated_selection", {})
+        sel_clustering = _deep_update(
+            clustering_cfg, {"kmeans": {"min_silhouette": vs.get("single_cluster_min_silhouette")}},
+        )
+        proxy = {**ensemble_cfg["base_learners"]["lightgbm"], "random_state": seed}
+        selection = select_resampling(
+            X_tr, y_tr, task_type, spec["select_from"], sel_clustering, resamplers_cfg, proxy,
+            ratios=vs.get("ratios", [0.1, 0.25, 0.5, 1.0]), inner_folds=vs.get("inner_folds", 3), seed=seed,
+        )
+        method, clustering_cfg = selection["method"], sel_clustering
+        if selection["ratio"] is not None:
+            resamplers_cfg = {**resamplers_cfg, "target_balance_ratio": selection["ratio"]}
     X_res, y_res, report = resample_training_set(
-        X_tr, y_tr, spec["resampler"], task_type, clustering_cfg, cfgs["resamplers"], positive_label=1,
+        X_tr, y_tr, method, task_type, clustering_cfg, resamplers_cfg, positive_label=1,
     )
+    if selection is not None:
+        report = {**report, "selected": {"method": selection["method"], "ratio": selection["ratio"]},
+                  "selection_scores": selection["scores"]}
     t_resample = time.time() - t0
 
     model = ConfidenceWeightedStackingEnsemble(ensemble_cfg).fit(X_res, y_res, X_val, y_val)
@@ -655,6 +680,7 @@ def _write_markdown(out_dir, wide, sig_df, ranks_df, cross_df, choices_df, resul
 # ---------------------------------------------------------------------------
 
 def main():
+    global REFERENCE_VARIANT
     parser = argparse.ArgumentParser(description="Repeated-CV ablation study + significance tests for ARS-Stack.")
     parser.add_argument("--datasets", nargs="+", default=["all"],
                         choices=list(DATASET_GROUPS.keys()) + list(DATASET_REGISTRY.keys()),
@@ -671,12 +697,15 @@ def main():
                         help="Smoke test: 3 folds x 1 repeat, 50 trees, datasets capped at 20k rows.")
     parser.add_argument("--fresh", action="store_true", help="Discard previously saved folds instead of resuming.")
     parser.add_argument("--summarize-only", action="store_true", help="Only rebuild tables/plot from saved folds.")
+    parser.add_argument("--reference", default=REFERENCE_VARIANT, choices=list(VARIANTS.keys()),
+                        help="Variant every other variant is compared against (default: ars_stack).")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
+    REFERENCE_VARIANT = args.reference
     # The per-cluster/per-learner INFO logs from the underlying modules are
     # far too chatty across hundreds of fits; keep this script's own progress.
-    for name in ("clustering", "density_scoring", "resampler_selector", "apply_resampling",
+    for name in ("clustering", "density_scoring", "resampler_selector", "apply_resampling", "selection",
                  "base_learners", "stacking", "preprocess", "ingest"):
         logging.getLogger(name).setLevel(logging.WARNING)
 

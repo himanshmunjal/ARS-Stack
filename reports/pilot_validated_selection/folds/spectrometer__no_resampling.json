@@ -1,0 +1,194 @@
+{
+  "settings": {
+    "dataset": "spectrometer",
+    "variant": "no_resampling",
+    "variant_spec": {
+      "resampler": "none"
+    },
+    "n_splits": 5,
+    "n_repeats": 1,
+    "val_fraction": 0.15,
+    "seed": 42,
+    "quick": false,
+    "max_rows": null,
+    "n_estimators_override": null,
+    "config_fingerprint": "fa07b819a6e9b893",
+    "code_fingerprint": "040c29ecd91dd661",
+    "xgboost_device": "cpu"
+  },
+  "provenance": {
+    "git_commit": "8826c3be7fbaa8bf7016548cf0a3fe1fa4cf712e",
+    "git_uncommitted_changes_in_src_or_configs": true,
+    "python": "3.11.0",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.9.0",
+      "imbalanced-learn": "0.14.2",
+      "xgboost": "3.2.0",
+      "lightgbm": "4.6.0"
+    },
+    "platform": "macOS-15.5-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu_count": 8,
+    "gpu": null
+  },
+  "folds": [
+    {
+      "metrics": {
+        "f1": 0.875,
+        "auc_pr": 0.9067460317460319,
+        "g_mean": 0.8819171036881969,
+        "mcc": 0.873053390247253
+      },
+      "threshold": 0.2834062977012263,
+      "weights": {
+        "random_forest": 0.3416856492027335,
+        "xgboost": 0.3416856492027335,
+        "lightgbm": 0.316628701594533
+      },
+      "n_train_resampled": 360,
+      "resampling": {
+        "mode": "none",
+        "final_class_counts": {
+          "0": 329,
+          "1": 31
+        },
+        "original_class_counts": {
+          "0": 329,
+          "1": 31
+        }
+      },
+      "seconds": {
+        "resample": 0.0,
+        "fit": 0.9
+      },
+      "fold": 0
+    },
+    {
+      "metrics": {
+        "f1": 0.9,
+        "auc_pr": 0.9060405643738978,
+        "g_mean": 0.9896370260347827,
+        "mcc": 0.8951603710910597
+      },
+      "threshold": 0.24037873800250797,
+      "weights": {
+        "random_forest": 0.3245194206426058,
+        "xgboost": 0.33780976926925016,
+        "lightgbm": 0.337670810088144
+      },
+      "n_train_resampled": 361,
+      "resampling": {
+        "mode": "none",
+        "final_class_counts": {
+          "0": 330,
+          "1": 31
+        },
+        "original_class_counts": {
+          "0": 330,
+          "1": 31
+        }
+      },
+      "seconds": {
+        "resample": 0.0,
+        "fit": 0.9
+      },
+      "fold": 1
+    },
+    {
+      "metrics": {
+        "f1": 0.8888888888888888,
+        "auc_pr": 0.9165432098765431,
+        "g_mean": 0.9379366108168786,
+        "mcc": 0.8785796105383734
+      },
+      "threshold": 0.2692649437594037,
+      "weights": {
+        "random_forest": 0.33330222710495744,
+        "xgboost": 0.3469419042707841,
+        "lightgbm": 0.3197558686242583
+      },
+      "n_train_resampled": 361,
+      "resampling": {
+        "mode": "none",
+        "final_class_counts": {
+          "0": 330,
+          "1": 31
+        },
+        "original_class_counts": {
+          "0": 330,
+          "1": 31
+        }
+      },
+      "seconds": {
+        "resample": 0.0,
+        "fit": 0.9
+      },
+      "fold": 2
+    },
+    {
+      "metrics": {
+        "f1": 0.8571428571428571,
+        "auc_pr": 0.9888888888888889,
+        "g_mean": 0.9844146306046317,
+        "mcc": 0.8525280779606852
+      },
+      "threshold": 0.09242159129714321,
+      "weights": {
+        "random_forest": 0.37084874887804026,
+        "xgboost": 0.35361982530265545,
+        "lightgbm": 0.27553142581930423
+      },
+      "n_train_resampled": 361,
+      "resampling": {
+        "mode": "none",
+        "final_class_counts": {
+          "0": 330,
+          "1": 31
+        },
+        "original_class_counts": {
+          "0": 330,
+          "1": 31
+        }
+      },
+      "seconds": {
+        "resample": 0.0,
+        "fit": 0.8
+      },
+      "fold": 3
+    },
+    {
+      "metrics": {
+        "f1": 0.6153846153846154,
+        "auc_pr": 0.9355089355089357,
+        "g_mean": 0.6666666666666666,
+        "mcc": 0.6501214902383374
+      },
+      "threshold": 0.3041224146724969,
+      "weights": {
+        "random_forest": 0.31249611228292395,
+        "xgboost": 0.3418080853205458,
+        "lightgbm": 0.34569580239653014
+      },
+      "n_train_resampled": 361,
+      "resampling": {
+        "mode": "none",
+        "final_class_counts": {
+          "0": 330,
+          "1": 31
+        },
+        "original_class_counts": {
+          "0": 330,
+          "1": 31
+        }
+      },
+      "seconds": {
+        "resample": 0.0,
+        "fit": 0.9
+      },
+      "fold": 4
+    }
+  ]
+}

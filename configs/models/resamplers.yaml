@@ -30,6 +30,15 @@ resamplers:
   # resampler *selection*, never the *amount* of oversampling.
   target_balance_ratio: 1.0
 
+  # Validated selection (variants ars_select / smote_select in
+  # src/experiments/run_ablation.py; src/resampling/selection.py): choose the
+  # resampling method AND amount by inner cross-validation of the training
+  # data, always including "no resampling", instead of the fixed rules below.
+  validated_selection:
+    ratios: [0.1, 0.25, 0.5, 1.0]   # target_balance_ratio values searched
+    inner_folds: 3
+    single_cluster_min_silhouette: 0.25   # adaptive path under selection: split only if clusters are clear
+
   # Used when a cluster's chosen resampler raises (e.g. ADASYN finds no
   # majority neighbours): the same number of samples is generated with this
   # instead, so every cluster still gets its full allocation.
