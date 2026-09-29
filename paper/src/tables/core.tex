@@ -1,0 +1,24 @@
+\begin{tabular}{lrrrr}
+\toprule
+Variant & F1 & AUC-PR & G-mean & MCC \\
+\midrule
+\multicolumn{5}{l}{\textit{creditcard}} \\
+\quad No resampling & \textbf{0.852 $\pm$ 0.023} & 0.840 $\pm$ 0.027 & 0.889 $\pm$ 0.019 & \textbf{0.855 $\pm$ 0.023} \\
+\quad SMOTE & 0.846 $\pm$ 0.026 & 0.844 $\pm$ 0.028 & \textbf{0.890 $\pm$ 0.018} & 0.848 $\pm$ 0.026 \\
+\quad SMOTE-ENN & 0.829 $\pm$ 0.031 & 0.830 $\pm$ 0.032 & 0.888 $\pm$ 0.024 & 0.830 $\pm$ 0.031 \\
+\quad Meta-learner stacking & 0.846 $\pm$ 0.022 & 0.843 $\pm$ 0.026 & 0.885 $\pm$ 0.016 & 0.849 $\pm$ 0.022 \\
+\quad ARS-Stack & 0.846 $\pm$ 0.022 & 0.843 $\pm$ 0.027 & 0.886 $\pm$ 0.015 & 0.848 $\pm$ 0.022 \\
+\multicolumn{5}{l}{\textit{mammography}} \\
+\quad No resampling & \textbf{0.709 $\pm$ 0.049} & \textbf{0.780 $\pm$ 0.042} & 0.824 $\pm$ 0.044 & \textbf{0.703 $\pm$ 0.050} \\
+\quad SMOTE & 0.699 $\pm$ 0.041 & 0.766 $\pm$ 0.047 & 0.815 $\pm$ 0.038 & 0.693 $\pm$ 0.041 \\
+\quad SMOTE-ENN & 0.662 $\pm$ 0.040 & 0.722 $\pm$ 0.058 & \textbf{0.833 $\pm$ 0.043} & 0.654 $\pm$ 0.040 \\
+\quad Meta-learner stacking & 0.699 $\pm$ 0.051 & 0.760 $\pm$ 0.046 & 0.813 $\pm$ 0.050 & 0.696 $\pm$ 0.049 \\
+\quad ARS-Stack & 0.694 $\pm$ 0.052 & 0.763 $\pm$ 0.046 & 0.801 $\pm$ 0.048 & 0.693 $\pm$ 0.049 \\
+\multicolumn{5}{l}{\textit{yeast (10-class)}} \\
+\quad No resampling & 0.441 $\pm$ 0.043 & 0.591 $\pm$ 0.057 & 0.642 $\pm$ 0.029 & 0.444 $\pm$ 0.041 \\
+\quad SMOTE & 0.520 $\pm$ 0.060 & 0.599 $\pm$ 0.038 & 0.701 $\pm$ 0.043 & 0.447 $\pm$ 0.034 \\
+\quad SMOTE-ENN & 0.461 $\pm$ 0.045 & 0.566 $\pm$ 0.047 & \textbf{0.725 $\pm$ 0.043} & 0.388 $\pm$ 0.032 \\
+\quad Meta-learner stacking & 0.527 $\pm$ 0.062 & 0.579 $\pm$ 0.062 & 0.710 $\pm$ 0.041 & \textbf{0.471 $\pm$ 0.025} \\
+\quad ARS-Stack & 0.524 $\pm$ 0.064 & 0.597 $\pm$ 0.041 & 0.708 $\pm$ 0.045 & 0.447 $\pm$ 0.032 \\
+\bottomrule
+\end{tabular}

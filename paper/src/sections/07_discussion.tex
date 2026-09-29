@@ -1,0 +1,69 @@
+\section{Discussion}\label{sec:discussion}
+
+\para{Implications}
+For strong tree ensembles with a tuned threshold, \emph{which} oversampler is applied, and \emph{where}, matters
+little (gaps G1--G2). The exception is aggressive cleaning: SMOTE-ENN, and to a lesser degree ADASYN, reliably hurt.
+Two mechanisms explain this. First, a strong learner combined with a tuned threshold already makes the
+precision--recall trade-off that resampling targets~\cite{elor2022smote,vandengoorbergh2022harm}. Second, once
+budgets are matched and leakage removed, most resamplers produce near-identical training sets. Gap G3 fares better:
+multiclass problems and datasets with a few dozen minority examples show the largest gains, and resampling research
+should focus there.
+
+\para{Five evaluation pitfalls}
+Our first pipeline contained five errors, each of which would have produced a spurious improvement:
+\begin{enumerate}
+  \item \textbf{Unequal budgets.} Local balancing added far less synthetic data than global SMOTE (a 1:200 versus
+        1:1 final ratio on creditcard), confounding resampler choice with resampling amount.
+  \item \textbf{Scale-cancelled weights.} Confidence weights fed into a meta-learner are a no-op.
+  \item \textbf{Rank-forced rules.} Percentile rules with one or two clusters decide by rank.
+  \item \textbf{Fixed 0.5 thresholds.} These make F1, G-mean and MCC mirror the oversampling ratio.
+  \item \textbf{Duplicates and pre-split resampling.} Both place near-copies of test points in the training data.
+\end{enumerate}
+Controlling for all five is, in our view, a minimum standard for resampling papers.
+
+\para{Threats to validity}
+\begin{itemize}
+  \item \textbf{Fixed hyperparameters.} Hyperparameters and rule thresholds were fixed a priori, not tuned per
+        dataset. Tuning would affect all variants alike.
+  \item \textbf{Hardware non-determinism.} It exists (GPU versus CPU XGBoost), so the study ran on one machine from
+        one code version.
+  \item \textbf{Small validation splits.} The 15\% split is small for tiny minority classes.
+  \item \textbf{External validity.} The benchmarks form a single collection. Deduplication limits comparability with
+        prior work.
+  \item \textbf{Learner scope.} The conclusions concern strong tree ensembles; weaker learners may benefit more from
+        resampling~\cite{vanhulse2007experimental}.
+  \item \textbf{Statistical power.} Per-dataset power is limited by 15 correlated folds, and the minority-size trend
+        does not survive multiplicity correction.
+\end{itemize}
+
+\section{Future Work}\label{sec:future}
+\begin{itemize}
+  \item \textbf{Other learners.} Repeat the study with logistic regression, $k$-NN, SVMs and deep tabular models, to
+        map the learner--resampler interaction.
+  \item \textbf{The small-sample regime.} Test the minority-size trend in a pre-registered study on datasets with
+        fewer than 100 minority examples, including multiclass ones, and add generative oversamplers.
+  \item \textbf{Meta-learned selection.} Replace rules and noisy inner validation with a meta-model that predicts the
+        benefit of resampling from dataset characteristics.
+  \item \textbf{Combination.} Replace global confidence weights with dynamic ensemble selection~\cite{cruz2018dynamic}.
+  \item \textbf{Alternatives to resampling.} Compare resampling with cost-sensitive learning, and evaluate
+        calibration~\cite{vandengoorbergh2022harm}.
+  \item \textbf{Analysis and deployment.} Use hierarchical Bayesian models across datasets~\cite{benavoli2017time},
+        and add drift monitoring and energy accounting~\cite{plan_p10_stacking} to the served models.
+\end{itemize}
+
+\section{Conclusion}\label{sec:conclusion}
+We proposed \ars{}, which selects a resampler per minority cluster from overlap and density scores and combines three
+tree ensembles with confidence weights, and we evaluated it in a budget-matched, leakage-free study on 28 datasets.
+
+\ars{} reliably beats aggressive cleaning (SMOTE-ENN). It is practically equivalent to plain SMOTE and to its own
+ablations, and it cannot be separated from training without resampling. Each null result has a concrete cause:
+near-uniform weights, cleaning that removes nothing after balancing, and selection that rarely varies within a
+dataset. A validated-selection pilot confirms that the headroom is small, and resampling mainly pays off when minority
+examples are scarce.
+
+We hope the method, the pipeline and the five pitfalls help future work target the settings where resampling matters,
+and measure its benefit fairly.
+
+\para{Availability}
+Code, configuration, per-fold results and analysis scripts are in the project repository. All datasets are public:
+Kaggle~\cite{dalpozzolo2015calibrating}, imbalanced-learn~\cite{lemaitre2017imbalanced} and UCI.

@@ -1,0 +1,139 @@
+\section{Results}\label{sec:results}
+
+\para{Overall ranking}
+Table~\ref{tab:ranks} and Figure~\ref{fig:ranks} give average ranks over the 28 datasets. The Friedman test rejects
+equal performance for F1 ($p=0.0018$), AUC-PR ($p=1.4\times10^{-4}$) and MCC ($p=5.8\times10^{-4}$), but not for
+G-mean ($p=0.11$). The differences come almost entirely from the two most aggressive global resamplers, SMOTE-ENN
+(AUC-PR rank 7.11) and ADASYN (6.16). The other seven variants lie within about one rank of each other. \ars{} ranks
+5th on AUC-PR (4.70), 4th on G-mean and 7th on F1 and MCC, while training \emph{without} resampling ranks first on
+AUC-PR (4.21) and MCC (4.29).
+
+\begin{table}
+  \centering
+  \caption{Average rank over 28 datasets (1 = best; best in bold) and Friedman $p$-values.}
+  \label{tab:ranks}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \input{tables/ranks.tex}
+\end{table}
+
+\begin{widefigure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/average_ranks.png}
+  \caption{Average rank per metric over 28 datasets (1 = best; \ars{} highlighted). Apart from SMOTE-ENN and ADASYN,
+  all variants lie within about one rank of each other.}
+  \label{fig:ranks}
+\end{widefigure}
+
+\para{Critical differences}
+With 9 methods and 28 datasets, the Nemenyi critical difference is 2.27 ranks (Figure~\ref{fig:cd}). For AUC-PR,
+SMOTE-ENN is significantly worse than every method ranked 4.84 or better, including \ars{}. For F1, it is
+significantly worse only than ARS with DBSCAN (4.20) and SMOTE-Tomek (4.25), and \ars{} (4.79) is not separated from
+it. No other pair of methods differs significantly.
+
+\begin{widefigure}
+  \centering
+  \includegraphics[width=0.49\linewidth]{figures/cd_auc_pr.png}\hfill
+  \includegraphics[width=0.49\linewidth]{figures/cd_f1.png}
+  \caption{Critical-difference diagrams for AUC-PR (left) and F1 (right). Methods joined by a bar are not
+  significantly different (Nemenyi, $\alpha=0.05$, CD $=2.27$).}
+  \label{fig:cd}
+\end{widefigure}
+
+\para{Pairwise comparisons}
+Holm-corrected Wilcoxon tests on per-dataset means (Table~\ref{tab:cross}) show \ars{} significantly better than
+SMOTE-ENN on F1 (21 wins/7 losses, $p_{\mathrm{Holm}}=0.041$), AUC-PR (22/6, $p=0.049$) and MCC (22/6, $p=0.041$). Its
+edge over ADASYN (19/9) does not survive correction ($p=0.089$ on F1). Against all other variants the win/loss counts
+are near even, and the mean AUC-PR differences are small: $-0.0045$ against SMOTE, $-0.0062$ against No resampling,
+and $+0.0001$ against equal weighting.
+
+\begin{widetable}
+  \centering
+  \caption{\ars{} against each variant over 28 datasets: wins/ties/losses of \ars{}, mean difference $\Delta$
+  (\ars{} $-$ baseline) and Holm-corrected Wilcoxon $p$ (bold: $p<0.05$).}
+  \label{tab:cross}
+  \footnotesize
+  \setlength{\tabcolsep}{3.5pt}
+  \input{tables/crossdataset.tex}
+\end{widetable}
+
+\para{Bayesian analysis}
+The Bayesian signed-rank test (Table~\ref{tab:bayes}) can support equivalence. It shows:
+\begin{itemize}
+  \item \textbf{Practically better:} \ars{} beats SMOTE-ENN on F1 ($P=0.96$), AUC-PR ($0.98$) and MCC ($0.99$).
+  \item \textbf{Practically equivalent} ($P(=)\geq0.95$) to SMOTE, SMOTE-Tomek, ARS with DBSCAN, equal-weight
+        averaging and meta-learner stacking on all three metrics, and to ADASYN on AUC-PR and MCC.
+  \item \textbf{Undecided} against No resampling. Equivalence is the most probable outcome ($P(=)=0.79$--$0.85$), and on
+        AUC-PR No resampling is more likely better than worse (0.15 versus 0.003).
+\end{itemize}
+The per-dataset Bayesian correlated $t$-tests are mostly undecided with 15 folds. Where they decide, they confirm the
+same picture: 76 of 112 dataset--metric pairs are equivalent to equal-weight averaging, and all 12 decided pairs against
+SMOTE-ENN favour \ars{}.
+
+\begin{widetable}
+  \centering
+  \caption{Bayesian signed-rank test over 28 datasets (ROPE $\pm0.01$): posterior probability that the baseline is
+  practically better / equivalent / worse than \ars{}; a verdict needs $P\geq0.95$.}
+  \label{tab:bayes}
+  \footnotesize
+  \setlength{\tabcolsep}{2.5pt}
+  \input{tables/bayes.tex}
+\end{widetable}
+
+\para{Per-dataset results}
+Table~\ref{tab:perds} lists every dataset with its characteristics and mean AUC-PR, ordered by minority-class size.
+No resampling has the highest AUC-PR on 12 of the 28 datasets. On webpage, us\_crime, scene and wine\_quality, every
+resampling variant loses 0.03--0.09 AUC-PR against it. Resampling wins mostly on datasets with tiny minority classes
+(arrhythmia, oil, ozone\_level, abalone\_19). Saturated datasets (pen\_digits, car\_eval\_4, letter\_img,
+optical\_digits) leave all variants within 0.002 of each other, except SMOTE-ENN on car\_eval\_4.
+
+For the core datasets (Table~\ref{tab:core}), the variants on creditcard differ by less than a standard deviation, and
+No resampling is best on mammography for every metric except G-mean. On 10-class yeast, resampling gives the largest
+gains in the study: macro-F1 rises from 0.441 to 0.524 and G-mean from 0.642 to 0.708. SMOTE-ENN, by contrast,
+collapses MCC to 0.388.
+
+\begin{widetable}
+  \centering
+  \caption{Datasets and mean AUC-PR over 15 folds (best per dataset in bold), ordered by minority-class size. $n$:
+  samples after duplicate removal; $d$: features; Min.: minority (smallest-class) size; IR: imbalance ratio.
+  Core datasets are marked $^\ast$.}
+  \label{tab:perds}
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \input{tables/datasets_results.tex}
+\end{widetable}
+
+\begin{table}
+  \centering
+  \caption{Core datasets: mean $\pm$ standard deviation over 15 folds (best in bold).}
+  \label{tab:core}
+  \scriptsize
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\linewidth}{!}{\input{tables/core.tex}}
+\end{table}
+
+\iffullversion
+\begin{figure}
+  \centering
+  \includegraphics[width=0.78\linewidth]{figures/core_comparison.png}
+  \caption{Core datasets: mean $\pm$ standard deviation over 15 folds for all nine variants and four metrics
+  (\ars{} highlighted). Fold-to-fold spread exceeds most differences between variants.}
+  \label{fig:core}
+\end{figure}
+\fi
+
+\para{Literature baselines}
+Reproducing the ``SMOTE + learner'' baselines of our review on a fixed split with a 0.5 threshold
+(Table~\ref{tab:lit}) gives lower scores than published: creditcard F1 is 0.78--0.83 against the reported
+0.89--0.915. Three leakage-free choices account for the gap: we remove duplicates, apply SMOTE only after splitting,
+and hold the test set out. Oversampling before the split, common in applied work, lets synthetic interpolations of
+test points leak into training. The comparison is indicative only, since the published splits differ.
+
+\begin{table}
+  \centering
+  \caption{Literature baselines on a fixed split (0.5 threshold) versus reported values.}
+  \label{tab:lit}
+  \scriptsize
+  \setlength{\tabcolsep}{2pt}
+  \resizebox{\linewidth}{!}{\input{tables/literature_baselines.tex}}
+\end{table}

@@ -42,3 +42,4 @@ reports/resampling/
 # creditcard.csv alone is 150 MB, over GitHub's 100 MB file limit.
 /data/raw/
 /data/processed/
+paper/*/main.log

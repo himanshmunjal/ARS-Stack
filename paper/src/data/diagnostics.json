@@ -1,0 +1,11 @@
+{
+  "weight_spread_median": 0.02184833010915524,
+  "weight_spread_p90": 0.10032447718459261,
+  "clusters_mean": 1.7962962962962963,
+  "split_share": 0.5703703703703704,
+  "tomek_identical_folds": 280,
+  "n_folds_per_variant": 420,
+  "equal_identical_folds": 159,
+  "compute_hours": 16.172833333333333,
+  "n_folds_total": 3780
+}

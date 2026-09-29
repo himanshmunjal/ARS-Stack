@@ -1,0 +1,30 @@
+% Leakage-free evaluation protocol: every fitted component sees only the outer-training part of its fold.
+\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    box/.style={draw=black!55, rounded corners=2pt, fill=#1, align=center, minimum height=8mm,
+                text width=23mm, inner sep=2pt},
+    box/.default=white,
+    arr/.style={-{Stealth[length=2mm]}, thick, black!70},
+    node distance=4mm and 4mm
+  ]
+  \node[box=gray!8] (data) {Cleaned dataset\\(duplicates removed)};
+  \node[box=gray!8, right=of data] (cv) {Repeated stratified\\5-fold CV $\times$ 3};
+  \node[box=red!8, right=of cv] (test) {Outer test fold\\(untouched until scoring)};
+  \node[box=gray!8, below=of cv] (train) {Outer training part};
+  \node[box=blue!8, below left=5mm and -2mm of train] (tr) {Inner train (85\%)};
+  \node[box=blue!8, below right=5mm and -2mm of train] (val) {Inner validation (15\%)};
+  \node[box=white, below=of tr] (scale) {Fit scaler;\\resample (variant)};
+  \node[box=white, below=of scale] (fit) {Fit RF, XGBoost,\\LightGBM};
+  \node[box=white, below=of val] (wt) {Confidence weights\\$w_l$ from val AUC-PR};
+  \node[box=white, below=of wt] (th) {Decision threshold\\$\tau^\ast$ from val F1};
+  \node[box=green!10, right=12mm of th] (score) {Score on outer\\test fold};
+  \node[box=green!10, below=of score] (st) {15 paired folds per\\dataset $\to$ statistics};
+
+  \draw[arr] (data) -- (cv); \draw[arr] (cv) -- (test); \draw[arr] (cv) -- (train);
+  \draw[arr] (train) -- (tr); \draw[arr] (train) -- (val);
+  \draw[arr] (tr) -- (scale); \draw[arr] (scale) -- (fit);
+  \draw[arr] (val) -- (wt); \draw[arr] (wt) -- (th);
+  \draw[arr] (fit) -- (wt);
+  \draw[arr] (th) -- (score); \draw[arr] (test.south) -- (score.north);
+  \draw[arr] (score) -- (st);
+\end{tikzpicture}

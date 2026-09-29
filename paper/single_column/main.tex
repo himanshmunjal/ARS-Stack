@@ -1,0 +1,83 @@
+% =====================================================================
+% ARS-Stack — research paper draft, single-column format
+% Build: see paper/build.sh (tectonic main.tex), or upload this folder to Overleaf.
+% =====================================================================
+\documentclass[10pt]{article}
+
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\fi
+\usepackage{microtype}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs, tabularx, multirow}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, fit, arrows.meta, calc}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[numbers, sort&compress]{natbib}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{authblk}
+
+\newcommand{\ars}{ARS-Stack}
+% Run-in paragraph heading (IEEEtran appends its own colon, article does not).
+\newcommand{\para}[1]{\paragraph{#1.}}
+% Content shown only in the longer single-column version.
+\newif\iffullversion
+\fullversiontrue
+% Wide floats: ordinary floats in single-column layout (figure* / table* in the IEEE version).
+\newenvironment{widefigure}{\begin{figure}}{\end{figure}}
+\newenvironment{widetable}{\begin{table}}{\end{table}}
+\newcommand{\usagefigwidth}{0.66\linewidth}
+\newcommand{\protocolfigwidth}{0.62\linewidth}
+% Float placement: allow floats "here" and fill pages densely.
+\makeatletter
+\renewcommand{\fps@figure}{!htbp}
+\renewcommand{\fps@table}{!htbp}
+\renewcommand{\fps@algorithm}{!htbp}
+\makeatother
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
+\title{\textbf{Does Adaptive Resampler Selection Help Modern Tree Ensembles?\\
+ARS-Stack and a Controlled Study on 28 Imbalanced Datasets}}
+\author[1]{[Author Name]}
+\author[1]{[Co-author Name]}
+\affil[1]{[Department, Institution, City, Country]\\ \texttt{[email@institution.edu]}}
+\date{Draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract.tex}
+\end{abstract}
+
+\noindent\textbf{Keywords:} class imbalance, resampling, SMOTE, ensemble learning, stacking, statistical comparison
+of classifiers, Bayesian analysis, MLOps.
+
+\input{sections/01_introduction.tex}
+\input{sections/02_related.tex}
+\input{sections/03_method.tex}
+\input{sections/04_setup.tex}
+\input{sections/05_results.tex}
+\input{sections/06_analysis.tex}
+\input{sections/07_discussion.tex}
+
+\bibliographystyle{unsrtnat}
+\setlength{\bibsep}{1.5pt plus 0.3ex}
+\begingroup\footnotesize
+\bibliography{references}
+\endgroup
+
+\end{document}

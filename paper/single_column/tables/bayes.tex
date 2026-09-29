@@ -1,0 +1,16 @@
+\begin{tabular}{lclclcl}
+\toprule
+ & \multicolumn{2}{c}{F1} & \multicolumn{2}{c}{AUC-PR} & \multicolumn{2}{c}{MCC} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+ARS-Stack vs. & $P(<)/P(=)/P(>)$ & Verdict & $P(<)/P(=)/P(>)$ & Verdict & $P(<)/P(=)/P(>)$ & Verdict \\
+\midrule
+Equal-weight avg. & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. \\
+Meta-learner stacking & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. \\
+ARS (DBSCAN) & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. \\
+SMOTE & 0.00/1.00/0.00 & equiv. & 0.01/0.99/0.00 & equiv. & 0.00/0.99/0.01 & equiv. \\
+SMOTE-Tomek & 0.00/1.00/0.00 & equiv. & 0.00/1.00/0.00 & equiv. & 0.00/0.99/0.00 & equiv. \\
+ADASYN & 0.00/0.95/0.05 & undecided & 0.00/1.00/0.00 & equiv. & 0.00/0.98/0.02 & equiv. \\
+SMOTE-ENN & 0.00/0.04/0.96 & ARS better & 0.00/0.02/0.98 & ARS better & 0.00/0.01/0.99 & ARS better \\
+No resampling & 0.03/0.79/0.18 & undecided & 0.15/0.85/0.00 & undecided & 0.10/0.82/0.08 & undecided \\
+\bottomrule
+\end{tabular}

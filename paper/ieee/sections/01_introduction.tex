@@ -1,0 +1,47 @@
+\section{Introduction}\label{sec:intro}
+
+In fraud detection, medical screening, intrusion detection and churn prediction, the class of interest is usually
+the rarest. A classifier that minimises overall error can then reach high accuracy while missing most minority cases,
+which keeps class imbalance a central problem in applied machine learning~\cite{he2009learning,krawczyk2016learning,
+branco2016survey,fernandez2018book}. The standard remedies are \emph{data-level} resampling, which generates synthetic
+minority samples or removes majority ones~\cite{chawla2002smote,he2008adasyn,batista2004study}, and ensembles that
+reduce the variance and bias of minority predictions~\cite{galar2012review,chawla2003smoteboost,liu2009exploratory}.
+Hybrid pipelines that resample the data and then fit an ensemble dominate recent applied work, particularly on
+credit-card fraud~\cite{plan_p7_comparative,plan_p9_fraud,plan_p10_stacking}.
+
+Our literature review (Section~\ref{sec:related}) found three recurring gaps. First, one resampler is chosen by hand
+and applied \emph{uniformly} to the whole minority class, although the best resampler depends on the
+dataset~\cite{plan_p8_hybrid,kovacs2019empirical} and plausibly on the region: small disjuncts~\cite{jo2004class},
+borderline points~\cite{han2005borderline} and overlap zones~\cite{plan_p2_dcshs} each call for different treatment.
+Second, ensemble combiners are static and trust every learner equally~\cite{plan_p5_survey}. Third, multiclass
+imbalance is under-studied~\cite{plan_p3_multiclass,plan_p6_smoteif}.
+
+We designed \ars{} to address all three. It clusters each minority class, scores the clusters for overlap and
+density, picks a resampler per cluster, and combines Random Forest~\cite{breiman2001random},
+XGBoost~\cite{chen2016xgboost} and LightGBM~\cite{ke2017lightgbm} with confidence weights. It supports binary and
+multiclass problems and ships as a reproducible MLOps system.
+
+Evaluating it fairly proved harder than building it. We found, and removed from our own pipeline, five pitfalls that
+each manufacture a spurious improvement: unequal oversampling budgets, confidence weights cancelled by a meta-learner,
+rank-forced selection rules, fixed decision thresholds, and duplicate records that straddle train and test splits.
+With them removed, we asked whether adaptive resampler selection helps a modern tree ensemble at all. The answer is
+largely negative, and we argue that this answer is the more useful result.
+
+\para{Contributions}
+\begin{enumerate}
+  \item \textbf{Method:} \ars{}, with scale-free cluster scores, a global synthetic-sample budget, confidence-weighted
+        averaging with a tuned threshold, and a multiclass extension (Section~\ref{sec:method}).
+  \item \textbf{Protocol:} a leakage-free, budget-matched evaluation in which scaling, resampling, weighting and
+        thresholds are fitted inside each fold (Section~\ref{sec:setup}).
+  \item \textbf{Study:} nine variants on 28 datasets with repeated cross-validation, analysed with Friedman, Nemenyi,
+        Holm-corrected Wilcoxon and corrected resampled $t$-tests, and with Bayesian tests using a region of
+        practical equivalence~\cite{benavoli2017time} (Section~\ref{sec:results}).
+  \item \textbf{Diagnosis:} why each component does or does not help, a validated-selection pilot, and a meta-analysis
+        of when resampling helps (Section~\ref{sec:analysis}).
+  \item \textbf{Artifact:} an open pipeline (DVC, MLflow~\cite{zaharia2018accelerating}, Prefect, Docker, CI,
+        FastAPI) that records code version, packages and hardware with every result.
+\end{enumerate}
+
+In short, \ars{} beats aggressive cleaning (SMOTE-ENN) but is practically equivalent to plain SMOTE and to its
+ablations, and it cannot be separated from no resampling. This agrees with growing evidence that strong learners
+gain little from oversampling~\cite{elor2022smote,vandengoorbergh2022harm,vanhulse2007experimental}.

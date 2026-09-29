@@ -1,0 +1,16 @@
+\begin{tabular}{lllrrr}
+\toprule
+Dataset & Model & Source & F1 & AUC-PR & MCC \\
+\midrule
+creditcard & RandomForest + SMOTE & ours & 0.832 & 0.821 & 0.836 \\
+creditcard & XGBoost + SMOTE & ours & 0.775 & 0.818 & 0.775 \\
+creditcard & Simple Stacking (RF+XGB, LR meta) + SMOTE & ours & 0.815 & 0.823 & 0.815 \\
+creditcard & Paper 7: xgboost & reported & 0.890 & 0.930 & -- \\
+creditcard & Paper 7: easyensemble & reported & 0.870 & -- & -- \\
+creditcard & Paper 9: stacking & reported & -- & -- & -- \\
+creditcard & Paper 10: stacking smote tomek & reported & 0.915 & 0.900 & -- \\
+mammography & RandomForest + SMOTE & ours & 0.615 & 0.606 & 0.602 \\
+mammography & XGBoost + SMOTE & ours & 0.630 & 0.639 & 0.618 \\
+mammography & Simple Stacking (RF+XGB, LR meta) + SMOTE & ours & 0.647 & 0.636 & 0.635 \\
+\bottomrule
+\end{tabular}

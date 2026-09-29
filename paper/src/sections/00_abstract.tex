@@ -1,0 +1,14 @@
+Class imbalance is usually handled by resampling the training data and then fitting an ensemble. Most hybrid
+pipelines apply one resampler to the whole minority class and combine their learners with fixed weights. We
+propose \ars{} (Adaptive Resampler-Selection Stacking), which clusters the minority class, scores each cluster
+for class overlap and local density, selects a resampler \emph{per cluster}, and combines Random Forest, XGBoost and
+LightGBM with confidence weights. We evaluate it under a leakage-free, budget-matched protocol on 28 datasets
+(credit-card fraud, mammography, 10-class yeast and 25 benchmarks) against eight baselines and ablations: 3,780
+cross-validation folds, analysed with frequentist and Bayesian tests. \ars{} is significantly and practically better
+than global SMOTE-ENN (Bayesian probability $\geq 0.96$ on F1, AUC-PR and MCC). It is, however, \emph{practically
+equivalent} to plain SMOTE, SMOTE-Tomek and its own ablations, and it cannot be separated from training without
+resampling. Diagnostics explain why: the confidence weights are almost uniform, Tomek cleaning removes nothing after
+1:1 SMOTE, and the selector rarely varies its choice within a dataset. A pilot of validated selection closes the gap
+to the baselines but does not exceed them. Resampling helps mainly when the minority class is very small (mean
+AUC-PR gain $+0.012$ below 75 minority samples, $-0.009$ above). We release the reproducible pipeline and discuss
+five evaluation pitfalls that make new resamplers look better than they are.

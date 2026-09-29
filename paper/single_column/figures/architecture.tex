@@ -1,0 +1,68 @@
+% ARS-Stack architecture: data layer -> adaptive resampling -> ensemble -> evaluation/serving,
+% with the MLOps layer underneath. Scaled to the available width by the caller.
+\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    box/.style={draw=black!55, rounded corners=2pt, fill=#1, align=center, minimum height=9mm,
+                text width=21mm, inner sep=2pt},
+    box/.default=white,
+    lane/.style={draw=black!35, rounded corners=4pt, inner sep=5pt},
+    lanelabel/.style={font=\sffamily\bfseries\scriptsize, anchor=south west, inner sep=1pt},
+    arr/.style={-{Stealth[length=2mm]}, thick, black!70},
+    node distance=4mm and 5mm
+  ]
+  % ---- Lane 1: data -----------------------------------------------------------
+  \node[box=gray!8] (raw) {28 raw datasets\\(3 core + 25 benchmark)};
+  \node[box=gray!8, right=of raw] (dvc) {DVC-versioned\\ingestion};
+  \node[box=gray!8, right=of dvc] (clean) {Cleaning +\\duplicate removal};
+  \node[box=gray!8, right=of clean] (split) {Stratified split;\\scaler fit on train};
+  \draw[arr] (raw) -- (dvc); \draw[arr] (dvc) -- (clean); \draw[arr] (clean) -- (split);
+
+  % ---- Lane 2: adaptive resampling (novel) -------------------------------------
+  \node[box=orange!12, below=11mm of raw] (clu) {Minority clustering\\($k$-means, auto-$k$)};
+  \node[box=orange!12, right=of clu] (score) {Cluster scoring:\\overlap $o_j$, density $\rho_j$};
+  \node[box=orange!22, right=of score] (sel) {Per-cluster\\resampler selection};
+  \node[box=orange!12, right=of sel] (res) {Budgeted local\\resampling + merge};
+  \draw[arr] (clu) -- (score); \draw[arr] (score) -- (sel); \draw[arr] (sel) -- (res);
+  \draw[arr] (split.south) -- ++(0,-3mm) -| (clu.north);
+
+  % candidate pool annotation
+  \node[font=\sffamily\tiny, text=black!70, below=1mm of sel, align=center] (pool)
+       {SMOTE $\cdot$ ADASYN $\cdot$ SMOTE-Tomek\\SMOTE-ENN $\cdot$ random oversampling};
+
+  % ---- Lane 3: ensemble ------------------------------------------------------------
+  \node[box=blue!8, below=19mm of clu] (rf) {Random Forest};
+  \node[box=blue!8, right=of rf] (xgb) {XGBoost};
+  \node[box=blue!8, right=of xgb] (lgb) {LightGBM};
+  \node[box=blue!18, right=of lgb] (comb) {Confidence-weighted\\average $\sum_l w_l p_l$};
+  \draw[arr] (res.south) -- ++(0,-10mm) -| (rf.north);
+  \draw[arr] (res.south) -- ++(0,-10mm) -| (xgb.north);
+  \draw[arr] (res.south) -- ++(0,-10mm) -| (lgb.north);
+  \draw[arr] (lgb) -- (comb);
+  \draw[arr] (rf.south) -- ++(0,-2mm) -| ([xshift=-4mm]comb.south);
+  \draw[arr] (xgb.south) -- ++(0,-2mm) -| ([xshift=-4mm]comb.south);
+
+  % ---- Lane 4: evaluation & serving -------------------------------------------------
+  \node[box=green!10, below=9mm of rf] (thr) {Threshold $\tau^\ast$\\tuned on validation};
+  \node[box=green!10, right=of thr] (eval) {F1, AUC-PR,\\G-mean, MCC};
+  \node[box=green!10, right=of eval] (stats) {Frequentist +\\Bayesian statistics};
+  \node[box=green!10, right=of stats] (api) {FastAPI\\inference service};
+  \draw[arr] (comb.south) -- ++(0,-3.5mm) -| (thr.north);
+  \draw[arr] (thr) -- (eval); \draw[arr] (eval) -- (stats);
+  \draw[arr] (comb.east) -- ++(3mm,0) |- (api.east);
+
+  % ---- lanes ---------------------------------------------------------------------------
+  \node[lane, fit=(raw)(split)] (L1) {};
+  \node[lane, fit=(clu)(res)(pool)] (L2) {};
+  \node[lane, fit=(rf)(comb)] (L3) {};
+  \node[lane, fit=(thr)(api)] (L4) {};
+  \node[lanelabel] at (L1.north west) {1\ \ Data layer};
+  \node[lanelabel] at (L2.north west) {2\ \ Adaptive resampling (ARS)};
+  \node[lanelabel] at (L3.north west) {3\ \ Confidence-weighted ensemble};
+  \node[lanelabel] at (L4.north west) {4\ \ Evaluation and serving};
+
+  % ---- MLOps layer ----------------------------------------------------------------------
+  \node[draw=black!55, rounded corners=3pt, fill=gray!12, below=5mm of L4.south, anchor=north,
+        minimum width=10.6cm, minimum height=7mm, align=center, font=\sffamily\scriptsize] (ops)
+       {\textbf{MLOps layer:}\ Git + GitHub Actions CI \ $\cdot$\ DVC \ $\cdot$\ MLflow tracking
+        \ $\cdot$\ Prefect DAG \ $\cdot$\ Docker \ $\cdot$\ provenance (commit, packages, hardware)};
+\end{tikzpicture}

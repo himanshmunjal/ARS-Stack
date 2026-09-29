@@ -1,0 +1,81 @@
+% =====================================================================
+% ARS-Stack — research paper draft, IEEE two-column conference format (IEEEtran)
+% Build: see paper/build.sh (tectonic main.tex), or upload this folder to Overleaf.
+% =====================================================================
+\documentclass[conference]{IEEEtran}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{newtxtext,newtxmath}
+\else
+  \usepackage{fontspec}
+  \setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+                              ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\fi
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs, tabularx, multirow}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, fit, arrows.meta, calc}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\ars}{ARS-Stack}
+% Run-in paragraph heading (IEEEtran appends its own colon, article does not).
+\newcommand{\para}[1]{\paragraph{#1}}
+% Content shown only in the longer single-column version.
+\newif\iffullversion
+\fullversionfalse
+% Wide floats span both columns in the IEEE layout.
+\newenvironment{widefigure}{\begin{figure*}[!t]}{\end{figure*}}
+\newenvironment{widetable}{\begin{table*}[!t]}{\end{table*}}
+\newcommand{\usagefigwidth}{\linewidth}
+\newcommand{\protocolfigwidth}{\linewidth}
+\makeatletter
+\renewcommand{\fps@figure}{!t}
+\renewcommand{\fps@table}{!t}
+\renewcommand{\fps@algorithm}{!t}
+\makeatother
+
+\begin{document}
+
+\title{Does Adaptive Resampler Selection Help Modern Tree Ensembles? ARS-Stack and a Controlled Study on 28
+Imbalanced Datasets}
+
+\author{\IEEEauthorblockN{[Author Name]}
+\IEEEauthorblockA{[Department, Institution]\\
+{}[City, Country]\\
+{}[email@institution.edu]}
+\and
+\IEEEauthorblockN{[Co-author Name]}
+\IEEEauthorblockA{[Department, Institution]\\
+{}[City, Country]\\
+{}[email@institution.edu]}}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract.tex}
+\end{abstract}
+
+\begin{IEEEkeywords}
+class imbalance, resampling, SMOTE, ensemble learning, stacking, statistical comparison of classifiers, Bayesian
+analysis, MLOps
+\end{IEEEkeywords}
+
+\input{sections/01_introduction.tex}
+\input{sections/02_related.tex}
+\input{sections/03_method.tex}
+\input{sections/04_setup.tex}
+\input{sections/05_results.tex}
+\input{sections/06_analysis.tex}
+\input{sections/07_discussion.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

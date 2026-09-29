@@ -1,0 +1,68 @@
+\section{Related Work and Research Gaps}\label{sec:related}
+
+\para{Resampling}
+SMOTE~\cite{chawla2002smote} interpolates between a minority sample and one of its $k$ nearest minority neighbours and
+remains the default oversampler~\cite{fernandez2018smote}. Its descendants mainly change \emph{where} samples are
+placed. Borderline-SMOTE~\cite{han2005borderline} and ADASYN~\cite{he2008adasyn} focus on hard points; Safe-Level
+SMOTE~\cite{bunkhumpornpat2009safe} and MWMOTE~\cite{barua2014mwmote} avoid noisy regions; $k$-means
+SMOTE~\cite{douzas2018kmeans} generates only inside safe clusters. Cleaning methods remove ambiguous points:
+Tomek links~\cite{tomek1976two} delete cross-class nearest-neighbour pairs, and ENN~\cite{wilson1972asymptotic} removes
+points misclassified by their neighbours. Both were combined with SMOTE by Batista \emph{et al.}~\cite{batista2004study}.
+In Kov\'{a}cs's comparison of 85 oversamplers on 104 datasets~\cite{kovacs2019empirical}, no method dominates.
+
+\para{Cluster- and region-aware resampling}
+The minority class is often a union of sub-concepts, and errors concentrate in small disjuncts~\cite{jo2004class}.
+Cluster-based methods~\cite{jo2004class,douzas2018kmeans} and DCSHS~\cite{plan_p2_dcshs}, which uses dual clustering
+and stage-wise hybrid sampling in overlap zones, adapt \emph{where} samples are generated. They still apply one fixed
+\emph{technique}, however. We found no method that chooses among several resamplers per region.
+
+\para{Ensembles}
+Boosting (SMOTEBoost~\cite{chawla2003smoteboost}, RUSBoost~\cite{seiffert2010rusboost}), bagging
+(EasyEnsemble~\cite{liu2009exploratory}) and stacking~\cite{wolpert1992stacked} have all been adapted to
+imbalance~\cite{galar2012review}. Random Forests and gradient-boosted trees~\cite{breiman2001random,chen2016xgboost,
+ke2017lightgbm} are now the usual base learners in hybrid fraud pipelines~\cite{plan_p9_fraud,plan_p10_stacking}.
+Instance-adaptive combination is studied as dynamic classifier selection~\cite{cruz2018dynamic}. Resampling pipelines,
+however, typically combine their learners with a fixed vote or an unweighted meta-learner~\cite{plan_p5_survey}.
+
+\para{Evaluation}
+Under imbalance, precision--recall metrics~\cite{saito2015precision}, the G-mean~\cite{kubat1997addressing} and the
+MCC~\cite{chicco2020advantages} replace accuracy. Across datasets, Dem\v{s}ar~\cite{demsar2006statistical} recommends the
+Friedman test~\cite{friedman1937use,iman1980approximations} with post-hoc
+tests~\cite{nemenyi1963distribution,holm1979simple}. Within a dataset, correlated folds call for the corrected
+resampled $t$-test~\cite{nadeau2003inference,bouckaert2004evaluating}. Bayesian tests with a region of practical
+equivalence (ROPE)~\cite{benavoli2017time,corani2015bayesian,benavoli2014bayesian} can also support \emph{equivalence}.
+Several studies doubt that resampling helps strong learners: gains vanish with boosted trees and tuned
+thresholds~\cite{elor2022smote}, imbalance corrections harm calibration~\cite{vandengoorbergh2022harm}, and benefits
+depend on the learner~\cite{vanhulse2007experimental}.
+
+\para{Research gaps}
+Table~\ref{tab:litgaps} condenses the ten studies of our review into four gaps:
+\textbf{G1}, no resampler dominates, yet pipelines fix one globally;
+\textbf{G2}, ensemble weights are static;
+\textbf{G3}, multiclass imbalance is under-explored;
+\textbf{G4}, evidence comes from few datasets and frequentist tests, and rarely controls the amount of resampling or
+leakage from resampling before splitting.
+\ars{} targets G1--G3; our protocol targets G4.
+
+\begin{widetable}
+  \centering
+  \caption{Studies from our literature review and the gaps they leave open (mapped to G1--G4).}
+  \label{tab:litgaps}
+  \scriptsize
+  \begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Ref. & Approach & Data & Limitation / gap \\
+    \midrule
+    SHREA~\cite{plan_p1_shrea} & Oversample-impute, undersample, one-class classifiers, bagging & Generic benchmarks & No large fraud/medical test; no SMOTE-ENN comparison (G4) \\
+    DCSHS~\cite{plan_p2_dcshs} & Dual clustering, stage-wise hybrid sampling in overlap zones & Public imbalanced sets & Region-aware but one sampling scheme (G1) \\
+    \cite{plan_p3_multiclass} & Survey: resampling + ensembles, binary vs.\ multiclass & Health, finance, security & 18/24 prior works binary only (G3) \\
+    \cite{plan_p4_gradient} & Gradient-based instance-level resampling & Cost-sensitive benchmarks & Tied to boosting internals, hard to reproduce (G4) \\
+    \cite{plan_p5_survey} & Spatial-distribution undersampling + voting & Various & Static voting weights (G2) \\
+    \cite{plan_p6_smoteif} & SMOTE + Isolation-Forest filtering & Medical multiclass & Medical only; no stacking (G1, G3) \\
+    \cite{plan_p7_comparative} & EasyEnsemble, XGBoost, RF, AdaBoost & Fraud, phishing & Benchmarks existing methods only (G1) \\
+    \cite{plan_p8_hybrid} & ROS/RUS/hybrid $\times$ bagging/boosting & Water quality & Best resampler dataset-dependent, no selector (G1) \\
+    \cite{plan_p9_fraud} & SMOTE + RF/XGBoost/LightGBM/stacking & IEEE-CIS, fraud & Resampler fixed to SMOTE (G1) \\
+    \cite{plan_p10_stacking} & SMOTE/SMOTE-Tomek + stacking & Credit-card fraud & One domain, manual resampler (G1, G4) \\
+    \bottomrule
+  \end{tabularx}
+\end{widetable}

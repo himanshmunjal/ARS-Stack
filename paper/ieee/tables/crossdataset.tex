@@ -1,0 +1,16 @@
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{F1} & \multicolumn{3}{c}{AUC-PR} & \multicolumn{3}{c}{MCC} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+ARS-Stack vs. & W/T/L & $\Delta$ & $p_{\mathrm{Holm}}$ & W/T/L & $\Delta$ & $p_{\mathrm{Holm}}$ & W/T/L & $\Delta$ & $p_{\mathrm{Holm}}$ \\
+\midrule
+Equal-weight avg. & 11/8/9 & +0.0003 & 1 & 12/3/13 & +0.0001 & 1 & 9/8/11 & +0.0003 & 1 \\
+Meta-learner stacking & 13/3/12 & +0.0011 & 1 & 16/1/11 & +0.0019 & 0.983 & 12/3/13 & +0.0005 & 1 \\
+ARS (DBSCAN) & 10/5/13 & +0.0017 & 1 & 9/5/14 & -0.0011 & 1 & 12/5/11 & +0.0024 & 1 \\
+SMOTE & 11/0/17 & +0.0011 & 1 & 12/0/16 & -0.0045 & 0.879 & 11/0/17 & +0.0025 & 1 \\
+SMOTE-Tomek & 11/0/17 & +0.0003 & 1 & 14/0/14 & -0.0041 & 0.983 & 11/0/17 & +0.0012 & 1 \\
+ADASYN & 19/0/9 & +0.0088 & 0.089 & 19/0/9 & +0.0014 & 0.983 & 19/0/9 & +0.0079 & 0.117 \\
+SMOTE-ENN & 21/0/7 & +0.0216 & \textbf{0.041} & 22/0/6 & +0.0176 & \textbf{0.048} & 22/0/6 & +0.0222 & \textbf{0.041} \\
+No resampling & 14/0/14 & +0.0066 & 1 & 12/0/16 & -0.0062 & 1 & 13/0/15 & +0.0025 & 1 \\
+\bottomrule
+\end{tabular}

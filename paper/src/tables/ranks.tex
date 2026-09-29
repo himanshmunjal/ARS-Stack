@@ -1,0 +1,17 @@
+\begin{tabular}{lrrrr}
+\toprule
+Variant & F1 & AUC-PR & G-mean & MCC \\
+\midrule
+No resampling & 4.68 & \textbf{4.21} & 4.96 & \textbf{4.29} \\
+SMOTE & 4.68 & 4.23 & 4.93 & 4.64 \\
+ARS (DBSCAN) & \textbf{4.20} & 4.29 & 4.52 & 4.55 \\
+SMOTE-Tomek & 4.25 & 4.30 & \textbf{4.39} & 4.36 \\
+\textbf{ARS-Stack} & 4.79 & 4.70 & 4.61 & 4.82 \\
+Equal-weight avg. & 4.79 & 4.71 & 4.46 & 4.64 \\
+Meta-learner stacking & 4.55 & 5.29 & 5.02 & 4.45 \\
+ADASYN & 6.32 & 6.16 & 6.36 & 6.25 \\
+SMOTE-ENN & 6.75 & 7.11 & 5.75 & 7.00 \\
+\midrule
+Friedman $p$ & 0.0018 & 0.00014 & 0.11 & 0.00058 \\
+\bottomrule
+\end{tabular}

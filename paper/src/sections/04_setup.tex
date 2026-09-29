@@ -1,0 +1,87 @@
+\section{Experimental Setup}\label{sec:setup}
+
+\para{Datasets}
+We use 28 datasets, listed with their characteristics in Table~\ref{tab:perds}. The three \emph{core} datasets cover
+the imbalance settings of our project plan:
+\begin{itemize}
+  \item credit-card fraud (\texttt{creditcard}~\cite{dalpozzolo2015calibrating}): binary, imbalance ratio (IR) 599;
+  \item mammography~\cite{woods1993comparative}: binary, IR 30;
+  \item yeast~\cite{horton1996probabilistic}: kept as a 10-class problem, smallest class 5 samples.
+\end{itemize}
+The 25 \emph{benchmarks} are the whole imbalanced-learn collection~\cite{ding2011diversified,lemaitre2017imbalanced}
+except the two sets that overlap the core datasets; none was excluded for size. Together they span 330--283{,}726
+samples, 6--617 features and IR 6--599. Exact duplicates are removed before splitting (1{,}081 rows from creditcard,
+30\% of mammography).
+
+\para{Variants}
+Table~\ref{tab:variants} lists the nine variants. All share the base learners, hyperparameters, weights and
+threshold tuning. All except \emph{No resampling} target the same class balance ($\beta=1$), so each comparison with
+\ars{} isolates one design decision.
+
+\begin{table}
+  \centering
+  \caption{Compared variants, their code names (used in Figures~\ref{fig:ranks} and~\ref{fig:cd}), and what each comparison with \ars{} isolates.}
+  \label{tab:variants}
+  \scriptsize
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.44\linewidth}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Variant (code name in figures) & Description (isolated decision) \\
+    \midrule
+    \ars{} (\texttt{ars\_stack}) & Per-cluster rule-based selection + confidence-weighted average \\
+    Equal-weight avg.\ (\texttt{equal\_average}) & Equal weights (value of confidence weighting) \\
+    Meta-learner stacking (\texttt{meta\_stacking}) & Logistic-regression stacking on out-of-fold predictions \\
+    ARS (DBSCAN) (\texttt{ars\_dbscan}) & DBSCAN clusters (clustering robustness) \\
+    SMOTE, ADASYN (\texttt{plain\_smote}, \texttt{plain\_adasyn}) & One global resampler (value of adaptive selection) \\
+    SMOTE-Tomek, SMOTE-ENN (\texttt{plain\_smote\_tomek}, \texttt{plain\_smote\_enn}) & Global SMOTE with Tomek-link / ENN cleaning \\
+    No resampling (\texttt{no\_resampling}) & Same ensemble without resampling \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\para{Protocol}
+Each dataset is evaluated with stratified 5-fold cross-validation repeated three times (seed 42), giving 15 paired
+folds per dataset and variant (Figure~\ref{fig:protocol}). Within each fold, the pipeline fits every component on the
+outer training part only:
+\begin{itemize}
+  \item a stratified 15\% validation split is held out;
+  \item the scaler is fitted and resampling applied on the remaining training data;
+  \item the confidence weights and threshold come from the validation split;
+  \item the outer test fold is used once, for scoring.
+\end{itemize}
+Resampling therefore never touches evaluation data.
+
+\begin{figure}
+  \centering
+  \resizebox{\protocolfigwidth}{!}{\input{figures/protocol.tex}}
+  \caption{Leakage-free protocol: scaling, resampling, weights and threshold are fitted inside the outer training
+  part of each fold.}
+  \label{fig:protocol}
+\end{figure}
+
+\para{Learners and metrics}
+Hyperparameters were fixed in advance and are shared by all variants:
+\begin{itemize}
+  \item Random Forest: 300 unpruned trees;
+  \item XGBoost: 300 trees, depth 6, learning rate 0.1, row and column subsampling 0.8;
+  \item LightGBM: 300 trees, learning rate 0.1;
+  \item all resamplers: $k=5$ neighbours.
+\end{itemize}
+We report minority-class F1, AUC-PR (average precision, our primary threshold-free metric), G-mean and
+MCC~\cite{saito2015precision,kubat1997addressing,chicco2020advantages}. For yeast, F1, AUC-PR and G-mean are
+macro-averaged.
+
+\para{Statistics}
+\begin{itemize}
+  \item \textbf{Across datasets}~\cite{demsar2006statistical}: average ranks, the Friedman and Iman--Davenport
+        tests~\cite{friedman1937use,iman1980approximations}, the Nemenyi critical difference, and Wilcoxon tests of
+        \ars{} against each variant~\cite{wilcoxon1945individual}, Holm-corrected~\cite{holm1979simple}.
+  \item \textbf{Within datasets}: the corrected resampled $t$-test~\cite{nadeau2003inference,bouckaert2004evaluating},
+        because the 15 folds are correlated.
+  \item \textbf{Bayesian}: correlated $t$-tests per dataset~\cite{corani2015bayesian} and signed-rank tests across
+        datasets~\cite{benavoli2014bayesian}, with a ROPE of $\pm0.01$ and a decision when one region reaches posterior
+        probability 0.95~\cite{benavoli2017time}.
+\end{itemize}
+
+\para{Computation}
+The $28\times9\times15=3{,}780$ folds took 16.2 compute-hours on a 16-thread CPU with an RTX~3050 GPU (used by
+XGBoost), from a single committed code version.

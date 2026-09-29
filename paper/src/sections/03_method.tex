@@ -1,0 +1,100 @@
+\section{The ARS-Stack Method}\label{sec:method}
+
+Figure~\ref{fig:arch} shows the system. The data layer versions and cleans the data. The adaptive-resampling layer,
+the methodological core, prepares the training set for the ensemble layer. An MLOps layer makes every run
+reproducible. We describe the binary case (minority class $c$) first and then the multiclass extension.
+
+\begin{widefigure}
+  \centering
+  \resizebox{\linewidth}{!}{\input{figures/architecture.tex}}
+  \caption{\ars{} architecture. The minority class is clustered, each cluster is scored and resampled with its own
+  resampler under a global synthetic-sample budget, and three tree ensembles are combined with confidence weights and
+  a validation-tuned threshold. An MLOps layer handles versioning, tracking, orchestration, containers and serving.}
+  \label{fig:arch}
+\end{widefigure}
+
+\para{Minority clustering}
+The minority samples $M$ of the training split are partitioned with $k$-means~\cite{macqueen1967some}, choosing
+$k\in\{2,\dots,6\}$ by silhouette score~\cite{rousseeuw1987silhouettes}. Clusters with fewer than 10 samples are
+merged into the largest, and a class with fewer than 20 samples is kept as one cluster.
+DBSCAN~\cite{ester1996density} is evaluated as an ablation.
+
+\para{Cluster scoring}
+The \emph{overlap score} of cluster $C_j$ is the mean share of majority samples among each point's $k_o=10$ nearest
+neighbours in the full training set:
+\begin{equation}
+  o_j = \frac{1}{|C_j|}\sum_{x\in C_j}\frac{1}{k_o}\sum_{x'\in \mathcal{N}_{k_o}(x)} \mathbb{1}\left[y(x')\neq c\right].
+  \label{eq:overlap}
+\end{equation}
+With $\delta(C)$ the inverse mean distance of the points of $C$ to their $k_d=5$ nearest neighbours within $C$, the
+\emph{density ratio} $\rho_j=\delta(C_j)/\delta(M)$ compares the cluster with its whole class. Unlike raw distances,
+it does not depend on the feature scale.
+
+\para{Rule-based selection}
+Each cluster receives a resampler through rules fixed before any experiment:
+\begin{equation}
+  r_j=\begin{cases}
+    \text{random oversampling} & |C_j| < 6,\\
+    \text{SMOTE-ENN} & o_j \ge 0.7,\\
+    \text{SMOTE-Tomek} & 0.4 \le o_j < 0.7,\\
+    \text{ADASYN} & \rho_j \le 0.75,\\
+    \text{SMOTE} & \text{otherwise.}
+  \end{cases}
+  \label{eq:rules}
+\end{equation}
+The rules are checked top to bottom. Strong overlap ($o_j\ge0.7$: most neighbours belong to the majority class) calls
+for aggressive ENN cleaning, boundary overlap for lighter Tomek-link cleaning~\cite{batista2004study}, and a cluster
+markedly sparser than its class ($\rho_j\le0.75$) for ADASYN's density-adaptive generation~\cite{he2008adasyn}.
+Well-separated, typically dense clusters get plain SMOTE. A percentile-based variant of the rules is used only with at least three
+clusters: with one or two clusters, percentiles decide by rank alone.
+
+\para{Budgeted local resampling}
+To compare resamplers rather than resampling amounts, every variant adds the same number of synthetic samples,
+$B=\max(0,\operatorname{round}(\beta n_{\bar c})-n_c)$ with $\beta=1$. \ars{} splits $B$ across clusters in proportion
+to their size, $b_j\propto|C_j|$. Each cluster is resampled inside its neighbourhood, defined as the cluster plus its
+$3|C_j|$ nearest majority points, with $r_j$ producing $|C_j|+b_j$ minority samples. All synthetic samples are then
+merged. A majority point counts as removed only if every cleaning step that saw it removed it. If a resampler fails,
+SMOTE fills its allocation.
+
+\para{Confidence-weighted ensemble}
+Random Forest, XGBoost and LightGBM (300 trees each) are trained on the resampled data and weighted by their
+validation AUC-PR:
+\begin{equation}
+  w_l=\frac{\max(\mathrm{AP}^{\mathrm{val}}_l,0.05)}{\sum_{l'}\max(\mathrm{AP}^{\mathrm{val}}_{l'},0.05)},\qquad
+  \hat p(x)=\sum_l w_l\,p_l(x).
+  \label{eq:weights}
+\end{equation}
+The decision threshold $\tau^\ast$ maximises F1 on the validation split. The weights are applied in an \emph{average}
+on purpose: fed as inputs to a logistic-regression or tree meta-learner, they would be cancelled, because the
+meta-learner rescales its inputs. Classic stacking~\cite{wolpert1992stacked} is evaluated as an ablation.
+
+\para{Multiclass extension}
+Every class except the largest is clustered, scored and resampled in turn, up to $\beta$ times the largest class. The
+weights use macro-averaged AUC-PR, and the prediction is the arg-max. Algorithm~\ref{alg:ars} summarises training.
+
+\begin{algorithm}
+  \caption{\ars{} training on one training split}
+  \label{alg:ars}
+  \small
+  \begin{algorithmic}[1]
+    \Require training data $(X,y)$, validation data $(X_v,y_v)$, ratio $\beta$
+    \For{each non-majority class $c$}
+      \State $\{C_j\}\gets$ \Call{Cluster}{$\{x_i: y_i=c\}$}; compute $o_j,\rho_j$
+      \State $B\gets\max(0,\operatorname{round}(\beta\,n_{\max})-n_c)$; $b_j\propto|C_j|$
+      \For{each cluster $C_j$}
+        \State $r_j\gets$ Eq.~\ref{eq:rules}; $N_j\gets C_j\,\cup$ nearest $3|C_j|$ majority points
+        \State $S_j\gets r_j(N_j)$ with target $|C_j|+b_j$ \Comment{fallback: SMOTE}
+      \EndFor
+      \State merge synthetic samples; drop majority points removed in all contexts
+    \EndFor
+    \State fit RF, XGBoost, LightGBM; $w_l\gets$ Eq.~\ref{eq:weights}; $\tau^\ast\gets\arg\max_\tau\mathrm{F1}^{\mathrm{val}}$
+    \State \Return $\hat p=\sum_l w_l p_l$ and $\tau^\ast$
+  \end{algorithmic}
+\end{algorithm}
+
+\para{Implementation}
+The pipeline uses scikit-learn~\cite{pedregosa2011scikit}, imbalanced-learn~\cite{lemaitre2017imbalanced}, XGBoost and
+LightGBM. Data are versioned with DVC, runs are tracked in MLflow~\cite{zaharia2018accelerating} and orchestrated as
+Prefect tasks, the environment is fixed in Docker, and CI runs over 120 unit tests. A FastAPI service serves the
+models. Every result records the git commit, package versions and hardware, and saved folds are keyed by a
+fingerprint of the configuration and code, so results from different code versions cannot mix.
