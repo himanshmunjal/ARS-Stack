@@ -306,7 +306,7 @@ def run_experiment(dataset_name: str, variant: str, settings: dict, cfgs: dict, 
 
     folds = []
     if fold_path.exists() and not fresh:
-        saved = json.loads(fold_path.read_text())
+        saved = json.loads(fold_path.read_text(encoding="utf-8"))
         if saved["settings"] != header:
             raise RuntimeError(
                 f"{fold_path} was produced with different settings/configs "
@@ -334,7 +334,7 @@ def run_experiment(dataset_name: str, variant: str, settings: dict, cfgs: dict, 
                           task_type, variant, cfgs, settings["val_fraction"], settings["seed"])
         result["fold"] = fold_idx
         folds.append(result)
-        fold_path.write_text(json.dumps({"settings": header, "provenance": provenance, "folds": folds}, indent=2))
+        fold_path.write_text(json.dumps({"settings": header, "provenance": provenance, "folds": folds}, indent=2), encoding="utf-8")
         m = result["metrics"]
         logger.info(
             "[%s | %s] fold %d/%d  f1=%.4f auc_pr=%.4f g_mean=%.4f mcc=%.4f  (%.0fs)",
@@ -352,7 +352,7 @@ def _load_all_folds(out_dir: Path) -> tuple:
     """Returns ({(dataset, variant): folds}, {(dataset, variant): settings})."""
     results, settings = {}, {}
     for path in sorted((out_dir / "folds").glob("*__*.json")):
-        saved = json.loads(path.read_text())
+        saved = json.loads(path.read_text(encoding="utf-8"))
         s = saved["settings"]
         n_expected = s["n_splits"] * s["n_repeats"]
         if len(saved["folds"]) < n_expected:
@@ -485,12 +485,12 @@ def summarize(out_dir: Path) -> None:
     # --- statistics ---
     sig_df = _per_dataset_tests(results, settings, datasets, variants)
     sig_df.to_csv(out_dir / "significance_results.csv", index=False)
-    (out_dir / "significance_results.json").write_text(sig_df.to_json(orient="records", indent=2))
+    (out_dir / "significance_results.json").write_text(sig_df.to_json(orient="records", indent=2), encoding="utf-8")
 
     ranks_df, cross_df = _cross_dataset(long_df, variants)
     ranks_df.to_csv(out_dir / "cross_dataset_ranks.csv", index=False)
     cross_df.to_csv(out_dir / "cross_dataset_tests.csv", index=False)
-    (out_dir / "cross_dataset_tests.json").write_text(cross_df.to_json(orient="records", indent=2))
+    (out_dir / "cross_dataset_tests.json").write_text(cross_df.to_json(orient="records", indent=2), encoding="utf-8")
 
     # --- which resampler did the adaptive path pick? ---
     choice_rows = []
@@ -647,7 +647,7 @@ def _write_markdown(out_dir, wide, sig_df, ranks_df, cross_df, choices_df, resul
                   counts.to_markdown(index=False), ""]
     lines += ["## Fold counts", ""]
     lines += [f"- {ds} / {var}: {len(folds)} folds" for (ds, var), folds in sorted(results.items())]
-    (out_dir / "summary.md").write_text("\n".join(lines) + "\n")
+    (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -709,7 +709,7 @@ def main():
         if provenance["git_uncommitted_changes_in_src_or_configs"]:
             logger.warning("src/ or configs/ has uncommitted changes — commit before a run you'll publish, "
                            "so environment.json points at the exact code.")
-        (out_dir / "environment.json").write_text(json.dumps({**provenance, "settings": settings}, indent=2))
+        (out_dir / "environment.json").write_text(json.dumps({**provenance, "settings": settings}, indent=2), encoding="utf-8")
 
         started = time.time()
         data_cache = {}

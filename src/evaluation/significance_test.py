@@ -291,3 +291,94 @@ def friedman_test(score_table) -> dict:
         p_f = float(f_dist.sf(f_stat, k - 1, (k - 1) * (n - 1)))
     return {"n_datasets": n, "n_methods": k, "chi2": float(chi2), "p_value": float(p),
             "iman_davenport_F": float(f_stat), "p_value_iman_davenport": p_f}
+
+
+# ---------------------------------------------------------------------------
+# Bayesian tests with a region of practical equivalence (ROPE)
+#
+# A frequentist "no significant difference" is absence of evidence, not
+# evidence of equivalence. These tests (Benavoli, Corani, Demšar & Zaffalon,
+# JMLR 2017, "Time for a change") return the posterior probability that the
+# candidate is practically worse, practically equivalent (|difference| < rope),
+# or practically better than the baseline.
+# ---------------------------------------------------------------------------
+
+def bayesian_correlated_ttest(scores_a: list, scores_b: list, rho: float, rope: float = 0.01) -> dict:
+    """
+    Bayesian correlated t-test (Corani & Benavoli 2015) on paired
+    cross-validation scores, the Bayesian counterpart of the corrected
+    resampled t-test: the posterior of the mean difference d = b - a is a
+    Student-t with n - 1 degrees of freedom, centred on mean(d), with scale
+    sqrt((1/n + rho/(1 - rho)) * var(d)).
+
+    Args:
+        rho: correlation between folds = n_test / (n_test + n_train) = 1/k for k-fold CV.
+        rope: half-width of the region of practical equivalence.
+    Returns:
+        {"p_baseline_better", "p_equivalent", "p_candidate_better", "mean_diff"}
+    """
+    from scipy.stats import t as t_dist
+
+    d = np.asarray(scores_b, dtype=float) - np.asarray(scores_a, dtype=float)
+    n, mean_d = len(d), float(np.mean(d))
+    var_d = float(np.var(d, ddof=1)) if n > 1 else 0.0
+    if var_d == 0.0:  # every fold differs by the same amount: posterior is a point mass
+        left, right = float(mean_d < -rope), float(mean_d > rope)
+        return {"p_baseline_better": left, "p_equivalent": 1.0 - left - right,
+                "p_candidate_better": right, "mean_diff": mean_d}
+    scale = np.sqrt((1.0 / n + rho / (1.0 - rho)) * var_d)
+    left = float(t_dist.cdf(-rope, df=n - 1, loc=mean_d, scale=scale))
+    right = float(t_dist.sf(rope, df=n - 1, loc=mean_d, scale=scale))
+    return {"p_baseline_better": left, "p_equivalent": max(0.0, 1.0 - left - right),
+            "p_candidate_better": right, "mean_diff": mean_d}
+
+
+def bayesian_signed_rank(scores_a: list, scores_b: list, rope: float = 0.01, prior_strength: float = 0.5,
+                         n_samples: int = 50000, seed: int = 0) -> dict:
+    """
+    Bayesian signed-rank test (Benavoli et al. 2014, 2017) for comparing two
+    methods across datasets, with a ROPE. Uses a Dirichlet-process posterior
+    over the per-dataset differences d = b - a, with a pseudo-observation at
+    0 of weight prior_strength. For every posterior sample, the probability
+    mass of the Walsh averages (d_i + d_j)/2 falling left of -rope, inside
+    [-rope, rope], or right of rope is computed; the reported probabilities
+    are how often each region holds the most mass.
+
+    Returns:
+        {"p_baseline_better", "p_equivalent", "p_candidate_better", "mean_diff"}
+    """
+    d = np.asarray(scores_b, dtype=float) - np.asarray(scores_a, dtype=float)
+    z = np.concatenate([[0.0], d])
+    pair_sums = z[:, None] + z[None, :]
+    left, right = pair_sums < -2 * rope, pair_sums > 2 * rope
+    inside = ~(left | right)
+
+    alpha = np.ones(len(z))
+    alpha[0] = prior_strength
+    w = np.random.default_rng(seed).dirichlet(alpha, size=n_samples)
+    mass = np.stack([((w @ m.astype(float)) * w).sum(axis=1) for m in (left, inside, right)], axis=1)
+    winner = np.bincount(mass.argmax(axis=1), minlength=3) / n_samples
+    return {"p_baseline_better": float(winner[0]), "p_equivalent": float(winner[1]),
+            "p_candidate_better": float(winner[2]), "mean_diff": float(d.mean())}
+
+
+def bayesian_verdict(result: dict, threshold: float = 0.95) -> str:
+    """Decision when one region holds at least `threshold` posterior probability."""
+    for key, label in (("p_candidate_better", "candidate better"), ("p_equivalent", "practically equivalent"),
+                       ("p_baseline_better", "baseline better")):
+        if result[key] >= threshold:
+            return label
+    return "undecided"
+
+
+# Studentized range statistic / sqrt(2) for the Nemenyi test at alpha = 0.05
+# (Demšar 2006, Table 5a), indexed by the number of methods k.
+_NEMENYI_Q05 = {2: 1.960, 3: 2.343, 4: 2.569, 5: 2.728, 6: 2.850, 7: 2.949, 8: 3.031, 9: 3.102,
+                10: 3.164, 11: 3.219, 12: 3.268, 13: 3.313, 14: 3.354, 15: 3.391}
+
+
+def nemenyi_critical_difference(n_methods: int, n_datasets: int) -> float:
+    """Critical difference in average rank (alpha = 0.05) for the Nemenyi post-hoc test."""
+    if n_methods not in _NEMENYI_Q05:
+        raise ValueError(f"Nemenyi q-value table covers 2-15 methods, got {n_methods}.")
+    return float(_NEMENYI_Q05[n_methods] * np.sqrt(n_methods * (n_methods + 1) / (6.0 * n_datasets)))

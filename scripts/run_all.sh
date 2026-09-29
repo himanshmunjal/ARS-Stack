@@ -14,6 +14,8 @@
 #   3. Literature baseline reproduction
 #   4. Single-split ARS-Stack runs + saved models for serving
 #   5. Repeated-CV ablation study + all statistics (the paper's results)
+#   6. Further analysis: Bayesian equivalence tests, when resampling helps,
+#      critical-difference diagrams
 #   Everything is logged to reports/run_all[_quick].log.
 #
 # Data: data/raw/creditcard/creditcard.csv is the one file that cannot be
@@ -43,7 +45,7 @@ step() { echo; echo "================ $* ================  ($(date '+%Y-%m-%d %H
 die() { echo; echo "ERROR: $*"; exit 1; }
 
 # ---------------------------------------------------------------------------
-step "0/5  Environment + data checks"
+step "0/6  Environment + data checks"
 # ---------------------------------------------------------------------------
 
 # Venv interpreter path differs between macOS/Linux and Windows.
@@ -111,24 +113,31 @@ fi
 run() { ${KEEP_AWAKE[@]+"${KEEP_AWAKE[@]}"} "$PY" "$@"; }  # form works with an empty array on bash 3.2
 
 # ---------------------------------------------------------------------------
-step "1/5  Unit tests"
+step "1/6  Unit tests"
 run -m pytest tests/ -q
 
-step "2/5  Data: ingest (downloads) + clean + dedup + split + scale (DVC pipeline)"
+step "2/6  Data: ingest (downloads) + clean + dedup + split + scale (DVC pipeline)"
 run -m dvc repro
 
-step "3/5  Literature baseline reproduction (plain SMOTE + RF / XGB / simple stacking)"
+step "3/6  Literature baseline reproduction (plain SMOTE + RF / XGB / simple stacking)"
 run -m src.experiments.baseline_reproduction --dataset creditcard
 run -m src.experiments.baseline_reproduction --dataset mammography
 
-step "4/5  ARS-Stack on the fixed train/val/test split + saved models for serving"
+step "4/6  ARS-Stack on the fixed train/val/test split + saved models for serving"
 for ds in "${DATASETS[@]}"; do
   run -m src.pipeline --dataset "$ds" --save-model
   run -m src.pipeline --dataset "$ds" --resampler smote     # fixed-SMOTE reference on the same split
 done
 
-step "5/5  Repeated-CV ablation study + statistics (all 28 datasets)"
+step "5/6  Repeated-CV ablation study + statistics (all 28 datasets)"
 run -m src.experiments.run_ablation $QUICK
+
+step "6/6  Further analysis: Bayesian equivalence tests, resampling benefit, CD diagrams"
+if [[ -n "$QUICK" ]]; then
+  run -m src.experiments.analyze_results --results-dir reports/ablation_results_quick
+else
+  run -m src.experiments.analyze_results
+fi
 
 step "Done — results"
 echo "  reports/baseline_results_*.csv         literature baseline reproduction"
@@ -139,5 +148,6 @@ if [[ -n "$QUICK" ]]; then
 else
   echo "  reports/ablation_results/summary.md    the paper's results: cross-dataset ranks + tests, per-dataset tests"
   echo "  reports/ablation_results/environment.json   code version + packages + machine, for the paper"
+  echo "  reports/ablation_results/analysis/analysis.md   Bayesian equivalence, resampling benefit, CD diagrams"
 fi
 echo "  full log: $LOG"

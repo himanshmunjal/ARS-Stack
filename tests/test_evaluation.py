@@ -109,3 +109,64 @@ def test_friedman_detects_consistent_ordering():
 
 def test_friedman_needs_three_methods():
     assert friedman_test(pd.DataFrame({"a": [1, 2], "b": [2, 1]}))["p_value"] is None
+
+
+# ---------------------------------------------------------------------------
+# Bayesian tests with ROPE + Nemenyi critical difference
+# ---------------------------------------------------------------------------
+
+from src.evaluation.significance_test import (
+    bayesian_correlated_ttest,
+    bayesian_signed_rank,
+    bayesian_verdict,
+    nemenyi_critical_difference,
+)
+
+
+def _probs_sum_to_one(r):
+    return r["p_baseline_better"] + r["p_equivalent"] + r["p_candidate_better"] == pytest.approx(1.0)
+
+
+def test_correlated_ttest_equivalent_better_worse():
+    rng = np.random.default_rng(0)
+    a = rng.normal(0.8, 0.02, 15)
+    eq = bayesian_correlated_ttest(a, a + rng.normal(0, 0.001, 15), rho=0.2, rope=0.01)
+    up = bayesian_correlated_ttest(a, a + 0.05 + rng.normal(0, 0.005, 15), rho=0.2, rope=0.01)
+    down = bayesian_correlated_ttest(a, a - 0.05 + rng.normal(0, 0.005, 15), rho=0.2, rope=0.01)
+    assert bayesian_verdict(eq) == "practically equivalent"
+    assert bayesian_verdict(up) == "candidate better"
+    assert bayesian_verdict(down) == "baseline better"
+    assert all(_probs_sum_to_one(r) for r in (eq, up, down))
+
+
+def test_correlated_ttest_constant_difference_is_point_mass():
+    a = np.full(10, 0.7)
+    assert bayesian_correlated_ttest(a, a + 0.02, rho=0.2)["p_candidate_better"] == 1.0
+    assert bayesian_correlated_ttest(a, a + 0.005, rho=0.2)["p_equivalent"] == 1.0
+
+
+def test_correlation_widens_the_posterior():
+    rng = np.random.default_rng(1)
+    a = rng.normal(0.8, 0.02, 15)
+    b = a + 0.02 + rng.normal(0, 0.01, 15)  # mean clearly above the rope, so a wider posterior is less sure
+    assert (bayesian_correlated_ttest(a, b, rho=0.2)["p_candidate_better"]
+            < bayesian_correlated_ttest(a, b, rho=0.0)["p_candidate_better"])
+
+
+def test_signed_rank_verdicts():
+    rng = np.random.default_rng(2)
+    x = rng.uniform(0.5, 0.9, 28)
+    assert bayesian_verdict(bayesian_signed_rank(x, x + rng.normal(0, 0.001, 28))) == "practically equivalent"
+    assert bayesian_verdict(bayesian_signed_rank(x, x + 0.04 + rng.normal(0, 0.005, 28))) == "candidate better"
+    assert bayesian_verdict(bayesian_signed_rank(x, x - 0.04 + rng.normal(0, 0.005, 28))) == "baseline better"
+
+
+def test_verdict_undecided_below_threshold():
+    assert bayesian_verdict({"p_baseline_better": 0.3, "p_equivalent": 0.4, "p_candidate_better": 0.3}) == "undecided"
+
+
+def test_nemenyi_cd_matches_demsar_formula():
+    # Demšar (2006): k = 9, N = 28 -> 3.102 * sqrt(9 * 10 / (6 * 28))
+    assert nemenyi_critical_difference(9, 28) == pytest.approx(3.102 * np.sqrt(90 / 168))
+    with pytest.raises(ValueError):
+        nemenyi_critical_difference(20, 28)

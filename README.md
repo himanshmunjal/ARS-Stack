@@ -145,6 +145,23 @@ python -m dags.ars_stack_dag --all
 | `plain_smote`, `plain_adasyn`, `plain_smote_tomek`, `plain_smote_enn` | adaptive per-cluster selection vs one global resampler |
 | `no_resampling` | whether resampling helps at all |
 
+### Further analysis (no training, from the saved folds)
+
+```bash
+python -m src.experiments.analyze_results        # -> reports/ablation_results/analysis/
+```
+
+- **Bayesian tests with a region of practical equivalence (±0.01)** (Benavoli et al.,
+  JMLR 2017): a Bayesian correlated t-test per dataset and a Bayesian signed-rank
+  test across datasets. They give posterior probabilities of "worse / practically
+  equivalent / better", so equivalence can be claimed rather than just
+  "no significant difference".
+- **When does resampling help?** The gain of resampling over no resampling per
+  dataset, correlated (Spearman, Holm-corrected) with minority-class size,
+  imbalance ratio, number of features and dataset size (`resampling_benefit.png`).
+- **Critical-difference diagrams** (Demšar 2006): average ranks with the Nemenyi
+  critical difference, one per metric (`critical_difference_<metric>.png`).
+
 ### Statistical protocol
 
 - **Per dataset:** 5-fold stratified CV × 3 repeats (15 paired folds). Primary
