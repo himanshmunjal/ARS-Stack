@@ -2,16 +2,16 @@
   "dataset": "mammography",
   "resampler": "adaptive",
   "metrics": {
-    "f1": 0.5517241379310345,
-    "auc_pr": 0.6215560250634309,
-    "g_mean": 0.6832793127377911,
-    "mcc": 0.5480101009313074
+    "f1": 0.5411764705882353,
+    "auc_pr": 0.6198804990031146,
+    "g_mean": 0.6691147657157532,
+    "mcc": 0.5404509683536777
   },
-  "decision_threshold": 0.8158669166571417,
+  "decision_threshold": 0.8215794364293801,
   "base_learner_weights": {
-    "random_forest": 0.33311098939607175,
-    "xgboost": 0.33376882577955935,
-    "lightgbm": 0.3331201848243689
+    "random_forest": 0.3319675604215893,
+    "xgboost": 0.335962283958319,
+    "lightgbm": 0.3320701556200917
   },
   "params": {
     "dataset": "mammography",
@@ -21,7 +21,8 @@
     "selection_mode": "absolute",
     "combiner": "weighted_average",
     "confidence_weighting_enabled": true,
-    "threshold_tuning": true
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
   },
   "resampling_report": {
     "mode": "adaptive",

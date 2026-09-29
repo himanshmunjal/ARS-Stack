@@ -2,16 +2,16 @@
   "dataset": "yeast_multiclass",
   "resampler": "smote",
   "metrics": {
-    "f1": 0.5178758301739668,
-    "auc_pr": 0.6653876982721172,
-    "g_mean": 0.7033312605991349,
-    "mcc": 0.5339174801017371
+    "f1": 0.5143869385676365,
+    "auc_pr": 0.6684728252592571,
+    "g_mean": 0.7006542352376911,
+    "mcc": 0.5332557197784574
   },
   "decision_threshold": null,
   "base_learner_weights": {
-    "random_forest": 0.34326932793584364,
-    "xgboost": 0.33612977312872144,
-    "lightgbm": 0.32060089893543486
+    "random_forest": 0.3437616900988285,
+    "xgboost": 0.3337757761984468,
+    "lightgbm": 0.3224625337027246
   },
   "params": {
     "dataset": "yeast_multiclass",
@@ -21,7 +21,8 @@
     "selection_mode": "absolute",
     "combiner": "weighted_average",
     "confidence_weighting_enabled": true,
-    "threshold_tuning": true
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
   },
   "resampling_report": {
     "mode": "global_smote",

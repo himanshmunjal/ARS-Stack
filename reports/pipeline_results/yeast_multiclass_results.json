@@ -2,16 +2,16 @@
   "dataset": "yeast_multiclass",
   "resampler": "adaptive",
   "metrics": {
-    "f1": 0.607659945034527,
-    "auc_pr": 0.6535840418858946,
-    "g_mean": 0.759305489981988,
-    "mcc": 0.4914170397838929
+    "f1": 0.5023283531979185,
+    "auc_pr": 0.6574570125174761,
+    "g_mean": 0.692438870063684,
+    "mcc": 0.48293693704110213
   },
   "decision_threshold": null,
   "base_learner_weights": {
-    "random_forest": 0.3430913439566791,
-    "xgboost": 0.33091713095621134,
-    "lightgbm": 0.32599152508710955
+    "random_forest": 0.34727723698972207,
+    "xgboost": 0.3233186531800224,
+    "lightgbm": 0.3294041098302556
   },
   "params": {
     "dataset": "yeast_multiclass",
@@ -21,7 +21,8 @@
     "selection_mode": "absolute",
     "combiner": "weighted_average",
     "confidence_weighting_enabled": true,
-    "threshold_tuning": true
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
   },
   "resampling_report": {
     "mode": "adaptive_multiclass",

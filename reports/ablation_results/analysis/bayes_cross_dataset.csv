@@ -1,0 +1,33 @@
+metric,baseline,candidate,n_datasets,p_baseline_better,p_equivalent,p_candidate_better,mean_diff,verdict
+f1,ars_dbscan,ars_stack,28,0.0,0.99996,4e-05,0.0017447104894855608,practically equivalent
+f1,equal_average,ars_stack,28,0.0,1.0,0.0,0.00029278402074702295,practically equivalent
+f1,meta_stacking,ars_stack,28,0.0,0.99998,2e-05,0.0010952300021538392,practically equivalent
+f1,no_resampling,ars_stack,28,0.03154,0.79188,0.17658,0.0066146530449558765,undecided
+f1,plain_adasyn,ars_stack,28,0.0,0.9482,0.0518,0.008774098632956745,undecided
+f1,plain_smote,ars_stack,28,0.00114,0.99634,0.00252,0.0011266007890541562,practically equivalent
+f1,plain_smote_enn,ars_stack,28,0.0001,0.03756,0.96234,0.021629168176795017,candidate better
+f1,plain_smote_tomek,ars_stack,28,0.00058,0.99806,0.00136,0.00031990030416301663,practically equivalent
+auc_pr,ars_dbscan,ars_stack,28,0.0,1.0,0.0,-0.0010658652965576576,practically equivalent
+auc_pr,equal_average,ars_stack,28,0.0,1.0,0.0,6.615457651361964e-05,practically equivalent
+auc_pr,meta_stacking,ars_stack,28,0.0,0.99996,4e-05,0.0019248307295536289,practically equivalent
+auc_pr,no_resampling,ars_stack,28,0.15058,0.84682,0.0026,-0.006179609195772302,undecided
+auc_pr,plain_adasyn,ars_stack,28,0.00044,0.99864,0.00092,0.001368529635474647,practically equivalent
+auc_pr,plain_smote,ars_stack,28,0.00556,0.99444,0.0,-0.004505138904405978,practically equivalent
+auc_pr,plain_smote_enn,ars_stack,28,0.00222,0.01634,0.98144,0.017634452599743094,candidate better
+auc_pr,plain_smote_tomek,ars_stack,28,0.0037,0.9963,0.0,-0.004100679703094948,practically equivalent
+g_mean,ars_dbscan,ars_stack,28,0.0003,0.9995,0.0002,7.440652298423833e-05,practically equivalent
+g_mean,equal_average,ars_stack,28,4e-05,0.99996,0.0,-0.001794932104071106,practically equivalent
+g_mean,meta_stacking,ars_stack,28,0.00144,0.9963,0.00226,-0.00022730314355863337,practically equivalent
+g_mean,no_resampling,ars_stack,28,0.13258,0.65714,0.21028,0.0014040952647594843,undecided
+g_mean,plain_adasyn,ars_stack,28,0.00752,0.83486,0.15762,0.00498345010922716,undecided
+g_mean,plain_smote,ars_stack,28,0.0241,0.9525,0.0234,-0.0012951335953409015,practically equivalent
+g_mean,plain_smote_enn,ars_stack,28,0.08352,0.55452,0.36196,0.0038909797389396483,undecided
+g_mean,plain_smote_tomek,ars_stack,28,0.1326,0.85402,0.01338,-0.004559011777269493,undecided
+mcc,ars_dbscan,ars_stack,28,0.0,0.99996,4e-05,0.0024224826738074904,practically equivalent
+mcc,equal_average,ars_stack,28,0.0,1.0,0.0,0.00033218365500581055,practically equivalent
+mcc,meta_stacking,ars_stack,28,0.0,0.99996,4e-05,0.0005121672390195406,practically equivalent
+mcc,no_resampling,ars_stack,28,0.10106,0.82016,0.07878,0.0024944197311471757,undecided
+mcc,plain_adasyn,ars_stack,28,0.0,0.9811,0.0189,0.007865196970331298,practically equivalent
+mcc,plain_smote,ars_stack,28,0.00098,0.9851,0.01392,0.0024602447253567914,practically equivalent
+mcc,plain_smote_enn,ars_stack,28,0.00048,0.00576,0.99376,0.02216513717881196,candidate better
+mcc,plain_smote_tomek,ars_stack,28,0.00048,0.99494,0.00458,0.0012456762034096925,practically equivalent

@@ -3,15 +3,15 @@
   "resampler": "smote",
   "metrics": {
     "f1": 0.6086956521739131,
-    "auc_pr": 0.6243666677597145,
+    "auc_pr": 0.6320322464610997,
     "g_mean": 0.7377811018101013,
     "mcc": 0.6008041754751867
   },
-  "decision_threshold": 0.7816823642047802,
+  "decision_threshold": 0.7553837989284933,
   "base_learner_weights": {
-    "random_forest": 0.33574979350395134,
-    "xgboost": 0.33391178997560544,
-    "lightgbm": 0.33033841652044327
+    "random_forest": 0.3358845010804305,
+    "xgboost": 0.3339197992880226,
+    "lightgbm": 0.3301956996315469
   },
   "params": {
     "dataset": "mammography",
@@ -21,7 +21,8 @@
     "selection_mode": "absolute",
     "combiner": "weighted_average",
     "confidence_weighting_enabled": true,
-    "threshold_tuning": true
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
   },
   "resampling_report": {
     "mode": "global_smote",

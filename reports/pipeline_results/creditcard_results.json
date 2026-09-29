@@ -2,16 +2,16 @@
   "dataset": "creditcard",
   "resampler": "adaptive",
   "metrics": {
-    "f1": 0.8108108108108109,
-    "auc_pr": 0.8220186192244837,
-    "g_mean": 0.8884056776552105,
-    "mcc": 0.8107992913431705
+    "f1": 0.8170731707317073,
+    "auc_pr": 0.8200355443086805,
+    "g_mean": 0.8397846505921386,
+    "mcc": 0.8273077208318089
   },
-  "decision_threshold": 0.5311226500136353,
+  "decision_threshold": 0.8764092885844106,
   "base_learner_weights": {
-    "random_forest": 0.3421895072401539,
-    "xgboost": 0.34271419028129957,
-    "lightgbm": 0.31509630247854653
+    "random_forest": 0.34197116979433323,
+    "xgboost": 0.34296296510512747,
+    "lightgbm": 0.31506586510053924
   },
   "params": {
     "dataset": "creditcard",
@@ -21,7 +21,8 @@
     "selection_mode": "absolute",
     "combiner": "weighted_average",
     "confidence_weighting_enabled": true,
-    "threshold_tuning": true
+    "threshold_tuning": true,
+    "xgboost_device": "cuda"
   },
   "resampling_report": {
     "mode": "adaptive",

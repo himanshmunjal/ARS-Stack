@@ -1,0 +1,8 @@
+dataset,model,source,f1,auc_pr,g_mean,mcc,xgboost_device,auc_roc
+creditcard,RandomForest + SMOTE,this project,0.8324,0.8213,0.8705,0.8362,cuda,
+creditcard,XGBoost + SMOTE,this project,0.7755,0.8181,0.8942,0.7755,cuda,
+creditcard,"Simple Stacking (RF+XGB, LR meta) + SMOTE",this project,0.8152,0.8226,0.8884,0.8154,cuda,
+creditcard,paper_7_xgboost,literature,0.89,0.93,,,,
+creditcard,paper_7_easyensemble,literature,0.87,,,,,
+creditcard,paper_9_stacking,literature,,,,,,0.943
+creditcard,paper_10_stacking_smote_tomek,literature,0.915,0.9,,,,
