@@ -1,0 +1,13 @@
+\begin{table}[t]\centering\small
+\caption{Percentage of majority-class training rows removed by the cleaning step, over all $28\times15$ folds. ARS-Stack cleans only the local majority context of each cluster.}
+\label{tab:removed}
+\begin{tabular}{lrrrr}
+\toprule
+Variant & Median & Mean & 90th pct. & Max \\
+\midrule
+ARS-Stack & 0.0 & 3.4 & 10.3 & 36.7 \\
+SMOTE-Tomek & 0.0 & 0.7 & 0.5 & 17.5 \\
+SMOTE-ENN & 13.9 & 19.5 & 48.4 & 92.6 \\
+\bottomrule
+\end{tabular}
+\end{table}

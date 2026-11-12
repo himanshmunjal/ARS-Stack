@@ -1,0 +1,19 @@
+\begin{table}[t]\centering\small
+\caption{Computational cost. Columns 2--3: median seconds per fold on credit card (283{,}725 rows; resampling only, and resampling + ensemble fitting). Column 4: median over the 28 datasets of total fold time relative to global SMOTE.}
+\label{tab:cost}
+\begin{tabular}{lrrr}
+\toprule
+Variant & Resample (s) & Total (s) & Rel.\ to SMOTE \\
+\midrule
+ARS-Stack & 1.0 & 104.9 & 1.20 \\
+Equal-weight avg. & 1.0 & 104.4 & 1.15 \\
+LR meta-stacking & 1.0 & 494.6 & 5.10 \\
+ARS (DBSCAN) & 0.6 & 106.7 & 1.04 \\
+SMOTE & 0.2 & 106.6 & 1.00 \\
+ADASYN & 0.3 & 110.1 & 1.00 \\
+SMOTE-Tomek & 113.2 & 219.2 & 1.06 \\
+SMOTE-ENN & 112.7 & 209.0 & 1.00 \\
+No resampling & 0.0 & 61.5 & 0.78 \\
+\bottomrule
+\end{tabular}
+\end{table}

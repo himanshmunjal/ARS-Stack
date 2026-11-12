@@ -1,0 +1,21 @@
+\begin{table}[t]\centering\small
+\caption{Core datasets: mean $\pm$ standard deviation over 15 folds (5-fold CV $\times$ 3 repeats). Yeast metrics are macro-averaged. Best mean per column in bold.}
+\label{tab:core}
+\setlength{\tabcolsep}{3pt}\footnotesize
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{2}{c}{Credit card (IR 600)} & \multicolumn{2}{c}{Mammography (IR 30)} & \multicolumn{2}{c}{Yeast, 10 classes} \\
+Variant & AUC-PR & MCC & AUC-PR & MCC & AUC-PR & MCC \\
+\midrule
+\textbf{ARS-Stack} & 0.843$\pm$0.027 & 0.848$\pm$0.022 & 0.763$\pm$0.046 & 0.693$\pm$0.049 & 0.597$\pm$0.041 & 0.447$\pm$0.032 \\
+Equal-weight avg. & 0.842$\pm$0.025 & 0.846$\pm$0.020 & 0.763$\pm$0.046 & 0.688$\pm$0.051 & 0.597$\pm$0.041 & 0.448$\pm$0.032 \\
+LR meta-stacking & 0.843$\pm$0.026 & 0.849$\pm$0.022 & 0.760$\pm$0.046 & 0.696$\pm$0.049 & 0.579$\pm$0.062 & \textbf{0.471$\pm$0.025} \\
+ARS (DBSCAN) & \textbf{0.844$\pm$0.027} & 0.849$\pm$0.026 & 0.750$\pm$0.043 & 0.676$\pm$0.046 & \textbf{0.601$\pm$0.038} & 0.450$\pm$0.032 \\
+SMOTE & 0.844$\pm$0.028 & 0.848$\pm$0.026 & 0.766$\pm$0.047 & 0.693$\pm$0.041 & 0.599$\pm$0.038 & 0.447$\pm$0.034 \\
+ADASYN & 0.836$\pm$0.032 & 0.845$\pm$0.021 & 0.739$\pm$0.047 & 0.694$\pm$0.048 & 0.586$\pm$0.038 & 0.438$\pm$0.033 \\
+SMOTE-Tomek & 0.844$\pm$0.028 & 0.848$\pm$0.026 & 0.767$\pm$0.047 & 0.703$\pm$0.033 & 0.599$\pm$0.047 & 0.452$\pm$0.035 \\
+SMOTE-ENN & 0.830$\pm$0.032 & 0.830$\pm$0.031 & 0.722$\pm$0.058 & 0.654$\pm$0.040 & 0.566$\pm$0.047 & 0.388$\pm$0.032 \\
+No resampling & 0.840$\pm$0.027 & \textbf{0.855$\pm$0.023} & \textbf{0.780$\pm$0.042} & \textbf{0.703$\pm$0.050} & 0.591$\pm$0.057 & 0.444$\pm$0.041 \\
+\bottomrule
+\end{tabular}
+\end{table}

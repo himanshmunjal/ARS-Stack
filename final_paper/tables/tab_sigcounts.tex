@@ -1,0 +1,20 @@
+\begin{table}[t]\centering\small
+\caption{Per-dataset tests: number of (dataset, metric) pairs out of $28\times4=112$ per baseline where the Holm-corrected Nadeau--Bengio corrected $t$-test is significant at $\alpha=0.05$, in favour of ARS-Stack (Win) or the baseline (Loss).}
+\label{tab:sigcounts}
+\begin{tabular}{llrrl}
+\toprule
+Baseline & Isolates & Win & Loss & Datasets \\
+\midrule
+Equal-weight avg. & confidence weighting & 1 & 0 & webpage \\
+LR meta-stacking & weighted avg.\ vs.\ LR meta-learner & 1 & 0 & webpage \\
+ARS (DBSCAN) & KMeans vs.\ DBSCAN & 0 & 0 & -- \\
+SMOTE & adaptive vs.\ global SMOTE & 0 & 0 & -- \\
+ADASYN & adaptive vs.\ global ADASYN & 2 & 0 & protein\_homo, webpage \\
+SMOTE-Tomek & adaptive vs.\ global SMOTE-Tomek & 0 & 1 & wine\_quality \\
+SMOTE-ENN & adaptive vs.\ global SMOTE-ENN & 7 & 0 & isolet, satimage, webpage \\
+No resampling & resampling vs.\ none & 0 & 1 & webpage \\
+\midrule
+Total & & 11 & 2 & of 896 tests \\
+\bottomrule
+\end{tabular}
+\end{table}

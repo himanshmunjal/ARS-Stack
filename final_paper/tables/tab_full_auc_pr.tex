@@ -1,0 +1,41 @@
+{\small\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{lrrrrrrrrr}
+\caption{Mean AUC-PR over 15 folds for every dataset and variant (best in bold). ARS = ARS-Stack, EqAvg = equal-weight average, Meta = LR meta-stacking, DBSC = ARS with DBSCAN, ADA = ADASYN, S-Tom = SMOTE-Tomek, S-ENN = SMOTE-ENN, None = no resampling.}\label{tab:full_auc_pr}\\
+\toprule
+Dataset & ARS & EqAvg & Meta & DBSC & SMOTE & ADA & S-Tom & S-ENN & None \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & ARS & EqAvg & Meta & DBSC & SMOTE & ADA & S-Tom & S-ENN & None \\
+\midrule
+\endhead
+solar\_flare\_m0 & 0.193 & 0.194 & 0.192 & 0.195 & 0.177 & 0.175 & 0.178 & \textbf{0.246} & 0.186 \\
+ecoli & 0.682 & 0.684 & 0.686 & 0.682 & 0.714 & \textbf{0.719} & 0.682 & 0.651 & 0.702 \\
+optical\_digits & 0.995 & 0.995 & 0.995 & 0.995 & 0.995 & 0.994 & 0.995 & 0.994 & \textbf{0.995} \\
+satimage & 0.811 & 0.811 & 0.806 & 0.810 & \textbf{0.811} & 0.805 & 0.811 & 0.728 & 0.809 \\
+pen\_digits & \textbf{0.999} & \textbf{0.999} & \textbf{0.999} & 0.998 & 0.998 & 0.997 & 0.998 & 0.998 & 0.998 \\
+abalone & 0.290 & 0.289 & 0.291 & 0.297 & 0.302 & 0.298 & 0.305 & \textbf{0.317} & 0.297 \\
+sick\_euthyroid & 0.896 & 0.897 & 0.897 & 0.898 & 0.897 & 0.896 & 0.897 & 0.868 & \textbf{0.898} \\
+spectrometer & 0.865 & 0.866 & 0.865 & 0.884 & 0.878 & 0.854 & 0.885 & 0.858 & \textbf{0.913} \\
+car\_eval\_34 & 0.990 & 0.990 & \textbf{0.990} & 0.990 & 0.989 & 0.990 & 0.989 & 0.973 & 0.990 \\
+isolet & 0.962 & 0.962 & 0.959 & 0.962 & 0.962 & 0.960 & 0.962 & 0.867 & \textbf{0.967} \\
+us\_crime & 0.550 & 0.550 & 0.549 & 0.556 & 0.546 & 0.546 & 0.548 & 0.523 & \textbf{0.594} \\
+yeast\_ml8 & 0.107 & 0.107 & 0.108 & \textbf{0.112} & 0.104 & 0.103 & 0.104 & 0.105 & 0.108 \\
+scene & 0.226 & 0.227 & 0.223 & 0.220 & 0.242 & 0.239 & 0.245 & 0.210 & \textbf{0.271} \\
+libras\_move & 0.894 & 0.893 & \textbf{0.899} & 0.894 & 0.895 & 0.881 & 0.895 & 0.878 & 0.881 \\
+coil\_2000 & 0.124 & 0.124 & 0.119 & 0.123 & 0.125 & 0.124 & 0.124 & \textbf{0.140} & 0.126 \\
+thyroid\_sick & 0.946 & 0.945 & 0.944 & 0.947 & 0.946 & 0.947 & 0.947 & 0.893 & \textbf{0.954} \\
+arrhythmia & 0.843 & \textbf{0.847} & 0.840 & 0.843 & 0.833 & 0.837 & 0.833 & 0.783 & 0.815 \\
+wine\_quality & 0.249 & 0.249 & 0.251 & 0.265 & 0.282 & 0.274 & 0.280 & 0.271 & \textbf{0.322} \\
+oil & 0.600 & 0.601 & 0.603 & 0.600 & \textbf{0.622} & 0.620 & \textbf{0.622} & 0.573 & 0.580 \\
+car\_eval\_4 & \textbf{1.000} & \textbf{1.000} & \textbf{1.000} & 1.000 & 1.000 & 1.000 & 1.000 & 0.972 & 0.999 \\
+letter\_img & 0.995 & 0.995 & 0.995 & 0.995 & 0.995 & 0.995 & 0.995 & 0.995 & \textbf{0.996} \\
+mammography & 0.763 & 0.763 & 0.760 & 0.750 & 0.766 & 0.739 & 0.767 & 0.722 & \textbf{0.780} \\
+ozone\_level & 0.356 & 0.355 & 0.355 & 0.347 & 0.369 & 0.361 & 0.369 & \textbf{0.385} & 0.321 \\
+webpage & 0.814 & 0.808 & 0.788 & 0.814 & 0.814 & 0.788 & 0.814 & 0.761 & \textbf{0.855} \\
+yeast\_multiclass & 0.597 & 0.597 & 0.579 & \textbf{0.601} & 0.599 & 0.586 & 0.599 & 0.566 & 0.591 \\
+protein\_homo & \textbf{0.902} & 0.902 & 0.901 & 0.900 & 0.901 & 0.888 & 0.901 & 0.893 & 0.885 \\
+abalone\_19 & 0.055 & 0.055 & 0.058 & 0.055 & 0.068 & 0.056 & \textbf{0.075} & 0.056 & 0.049 \\
+creditcard & 0.843 & 0.842 & 0.843 & \textbf{0.844} & 0.844 & 0.836 & 0.844 & 0.830 & 0.840 \\
+\bottomrule
+\end{longtable}}
